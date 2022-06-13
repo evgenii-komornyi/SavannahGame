@@ -72,10 +72,10 @@ namespace UI
                 switch (consoleKey)
                 {
                     case ConsoleKey.A:
-                        _animalActions.AddAnimal(new Antilope(), animals, _board.GameBoard);
+                        _animalActions.AddAnimal(new Antilope(), animals, _board);
                         break;
                     case ConsoleKey.L:
-                        _animalActions.AddAnimal(new Lion(), animals, _board.GameBoard);
+                        _animalActions.AddAnimal(new Lion(), animals, _board);
                         break;
                 }
 

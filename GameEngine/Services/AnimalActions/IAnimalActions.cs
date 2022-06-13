@@ -13,7 +13,7 @@ namespace GameEngine.Services
         /// <param name="newAnimal">New animal.</param>
         /// <param name="animals">Animals.</param>
         /// <param name="board">Board.</param>
-        void AddAnimal(IAnimal newAnimal, List<IAnimal> animals, string[,] board);
+        void AddAnimal(IAnimal newAnimal, List<IAnimal> animals, Board board);
 
         /// <summary>
         /// Moves animals on the board.

@@ -16,26 +16,17 @@ namespace GameEngine.Services
         /// <param name="newAnimal">New animal.</param>
         /// <param name="animals">Animals.</param>
         /// <param name="board">Board.</param>
-        public void AddAnimal(IAnimal newAnimal, List<IAnimal> animals, string[,] board)
+        public void AddAnimal(IAnimal newAnimal, List<IAnimal> animals, Board board)
         {
-            int newRandomXPosition;
-            int newRandomYPosition;
-
-            do
+            List<NewAnimalCoordinates> freeCells = CalculateFreeCellsToAddAnimal(animals, board);
+            if (board.GameBoard.Length > board.GameBoard.Length * ConstantsRepository.HalfOfBoard)
             {
-                newRandomXPosition = GenerateRandomCoordinates(ConstantsRepository.One, board.GetLength(0));
-                newRandomYPosition = GenerateRandomCoordinates(ConstantsRepository.One, board.GetLength(1));
-
-                if (board.Length > board.Length * ConstantsRepository.HalfOfBoard)
-                {
-                    AddAnimalToList(newAnimal, newRandomXPosition, newRandomYPosition, animals);
-                }
-                else
-                {
-                    return;
-                }
-            } 
-            while (!IsNotFreePlace(newRandomXPosition, newRandomYPosition, animals));         
+                AddAnimalToList(newAnimal, freeCells, animals);
+            }
+            else
+            {
+                return;
+            }
         }
 
         /// <summary>
@@ -45,11 +36,41 @@ namespace GameEngine.Services
         /// <param name="newXCoordinate">New X coordinate.</param>
         /// <param name="newYCoordinate">New Y coordinate.</param>
         /// <param name="animals">Animals.</param>
-        private void AddAnimalToList(IAnimal newAnimal, int newXCoordinate, int newYCoordinate, List<IAnimal> animals)
+        private void AddAnimalToList(IAnimal newAnimal,List<NewAnimalCoordinates> freeCells, List<IAnimal> animals)
         {
-            newAnimal.CoordinateX = newXCoordinate;
-            newAnimal.CoordinateY = newYCoordinate;
+            NewAnimalCoordinates freeCoordinates = freeCells[GenerateRandomCoordinates(0, freeCells.Count)];
+            newAnimal.CoordinateX = freeCoordinates.NewXCoordinate;
+            newAnimal.CoordinateY = freeCoordinates.NewYCoordinate;
             animals.Add(newAnimal);
+        }
+
+        /// <summary>
+        /// Calculates the free cells on board to add a new animal. 
+        /// </summary>
+        /// <param name="animals">Animals.</param>
+        /// <param name="board">Board.</param>
+        /// <returns>Free cells.</returns>
+        private List<NewAnimalCoordinates> CalculateFreeCellsToAddAnimal(List<IAnimal> animals, Board board)
+        {
+            List<NewAnimalCoordinates> freeCellsToAdd = new List<NewAnimalCoordinates>();
+            NewAnimalCoordinates newCoordinates = new NewAnimalCoordinates();
+
+            for (int newXCoordinate = 0; newXCoordinate < board.GameBoard.GetLength(0); newXCoordinate++)
+            {
+                for (int newYCoordinate = 0; newYCoordinate < board.GameBoard.GetLength(1); newYCoordinate++)
+                {
+                    if (!board.IsOffBoard(newXCoordinate, newYCoordinate, board.GameBoard) &&
+                        !IsNotFreePlace(newXCoordinate, newYCoordinate, animals))
+                    {
+                        newCoordinates = new NewAnimalCoordinates();
+                        newCoordinates.NewXCoordinate = newXCoordinate;
+                        newCoordinates.NewYCoordinate = newYCoordinate;
+                        freeCellsToAdd.Add(newCoordinates);
+                    }
+                }
+            }
+
+            return freeCellsToAdd;
         }
 
         /// <summary>
