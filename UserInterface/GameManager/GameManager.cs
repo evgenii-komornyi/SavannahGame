@@ -16,7 +16,7 @@ namespace UI
         private readonly IAnimalActions _animalActions;
         private Board _board;
 
-        List<IAnimal> animals = new List<IAnimal>();
+        List<Animal> animals = new List<Animal>();
 
         /// <summary>
         /// The class contains all logic layer to start a game from User Interface.
@@ -24,7 +24,8 @@ namespace UI
         /// <param name="userInterface">User Interface.</param>
         /// <param name="window">Window.</param>
         /// <param name="animalActions">Animal Action.</param>
-        public GameManager(IUserInterface userInterface, IWindow window, 
+        public GameManager(IUserInterface userInterface, 
+                            IWindow window, 
                             IAnimalActions animalActions)
         {
             _userInterface = userInterface;
@@ -65,7 +66,7 @@ namespace UI
                 _board.ChangeAnimalWithEmptyCell(animals);
 
                 _animalActions.Move(_board, animals);
-                _animalActions.Die(animals);
+                _animalActions.ClearBoard(animals);
                 Thread.Sleep(ConstantsRepository.ThreadSleep);
                 ConsoleKey? consoleKey = _userInterface.GetInputKey();
                 

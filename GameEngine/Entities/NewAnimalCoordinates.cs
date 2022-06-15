@@ -1,7 +1,7 @@
 ﻿namespace GameEngine.Entities
 {
     /// <summary>
-    /// Class contains new animal coordinates.
+    /// The class contains new animal coordinates.
     /// </summary>
     public class NewAnimalCoordinates
     {

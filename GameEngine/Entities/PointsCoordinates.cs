@@ -1,7 +1,7 @@
 ﻿namespace GameEngine.Entities
 {
     /// <summary>
-    /// Class contains properties to pass them as parameters.
+    /// The class contains properties to pass them as parameters.
     /// It was created to make shorter input parameters.
     /// </summary>
     public class PointsCoordinates

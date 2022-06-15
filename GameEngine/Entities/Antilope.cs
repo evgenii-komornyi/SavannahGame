@@ -5,8 +5,11 @@ namespace GameEngine.Entities
     /// <summary>
     /// Antilope entity.
     /// </summary>
-    public class Antilope : IAnimal
+    public class Antilope : Animal
     {
+        /// <summary>
+        /// Antilope entity.
+        /// </summary>
         public Antilope()
         {
             Id = GenerateId();
@@ -16,18 +19,143 @@ namespace GameEngine.Entities
             Letter = ConstantsRepository.AntilopeLetter;
         }
 
-        public int Id { get; set; }
-        public int CoordinateX { get; set; }
-        public int CoordinateY { get; set; }
-        public AnimalType Type { get; set; }
-        public int Vision { get; set; }
-        public bool IsDead { get; set; }
-        public string Letter { get; set; }
-
-        private static int id = 0;
-        private int GenerateId()
+        /// <summary>
+        /// Moves current animal on the board.
+        /// </summary>
+        /// <param name="board">Board.</param>
+        /// <param name="animal">Animal.</param>
+        /// <param name="animals">Animals.</param>
+        public override void MoveAnimal(Board board, Animal animal, List<Animal> animals)
         {
-            return id++;
+            Antilope antilope = (Antilope)animal;
+
+            List<Animal> lionsAround = FindAnimalsAroundByType(antilope, animals, AnimalType.Lion);
+
+            Animal? nearestLion = FindNearestLion(lionsAround, antilope);
+                
+            List<NewAnimalCoordinates> freeCellsToMove = CalculateCorrectPosition(board, animals, antilope);
+                
+            if (nearestLion == null)
+            {
+                MoveToNewRandomPosition(antilope, freeCellsToMove);
+            }
+            else
+            {
+                if (IsLionNear(antilope, nearestLion))
+                {
+                    TryToRunAway(nearestLion, antilope, freeCellsToMove);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Finds nearest lion to the antilope.
+        /// </summary>
+        /// <param name="lionsAround">Lions around.</param>
+        /// <param name="antilope">Antilope.</param>
+        /// <returns>Nearest lion.</returns>
+        private Animal? FindNearestLion(List<Animal> lionsAround, Antilope antilope)
+        {
+            Animal? nearestLion = null;
+
+            if (lionsAround.Count != 0)
+            {
+                nearestLion = CalculateMinDistanceToLion(lionsAround, antilope);
+            }
+
+            return nearestLion;
+        }
+
+        /// <summary>
+        /// Calculates minimal distance to the lion.
+        /// </summary>
+        /// <param name="lionsAround">Lions around.</param>
+        /// <param name="antilope">Antilope.</param>
+        /// <returns>Nearest lion to the antilope.0</returns>
+        private Animal? CalculateMinDistanceToLion(List<Animal> lionsAround, Antilope antilope)
+        {
+            double nearestLionDistance;
+            int counter = 0;
+            int nearestLionIndex = 0;
+            double minLionDistance = Double.MaxValue;
+
+            foreach (var lion in lionsAround)
+            {
+                PointsCoordinates pointsCoordinates = new PointsCoordinates();
+                pointsCoordinates.FirstXPoint = lion.CoordinateX;
+                pointsCoordinates.SecondXPoint = lion.CoordinateX;
+                pointsCoordinates.FirstYPoint = lion.CoordinateY;
+                pointsCoordinates.SecondYPoint = lion.CoordinateY;
+
+                nearestLionDistance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
+
+                if (minLionDistance > nearestLionDistance)
+                {
+                    minLionDistance = nearestLionDistance;
+                    nearestLionIndex = counter;
+                }
+                counter++;
+            }
+
+            return lionsAround[nearestLionIndex];
+        }
+
+        /// <summary>
+        /// Checks the nearest lion to antilope.
+        /// </summary>
+        /// <param name="antilope">Antilope.</param>
+        /// <param name="nearestLion">Nearest lion.</param>
+        /// <returns>Is lion near.</returns>
+        private bool IsLionNear(Antilope antilope, Animal nearestLion)
+        {
+            return Math.Abs(antilope.CoordinateX - nearestLion.CoordinateX) < 2 ||
+                   Math.Abs(antilope.CoordinateY - nearestLion.CoordinateY) < 2;
+        }
+
+        /// <summary>
+        /// Calculates next move of the antilope when she has found the nearest lion. 
+        /// </summary>
+        /// <param name="nearestLion">Lion.</param>
+        /// <param name="antilope">Antilope.</param>
+        /// <param name="freeCellsToMove">Free cells to move.</param>
+        private void TryToRunAway(Animal nearestLion, Antilope antilope, List<NewAnimalCoordinates> freeCellsToMove)
+        {
+            antilope.CoordinateX = freeCellsToMove[CalculateMaxDistanceFromLionByFreeCells(freeCellsToMove, nearestLion)].NewXCoordinate;
+            antilope.CoordinateY = freeCellsToMove[CalculateMaxDistanceFromLionByFreeCells(freeCellsToMove, nearestLion)].NewYCoordinate;
+        }
+
+        /// <summary>
+        /// Calculates maximal distance to the lion by free cells.
+        /// </summary>
+        /// <param name="freeCellsToMove">Free cells to move.</param>
+        /// <param name="lion">Lion.</param>
+        /// <returns>Index of maximal distance cell.</returns>
+        private int CalculateMaxDistanceFromLionByFreeCells(List<NewAnimalCoordinates> freeCellsToMove, Animal lion)
+        {
+            double distance;
+            int counter = 0;
+            int farthestFreeCellIndex = 0;
+            double maxDistance = 0;
+
+            foreach (var cell in freeCellsToMove)
+            {
+                PointsCoordinates pointsCoordinates = new PointsCoordinates();
+                pointsCoordinates.FirstXPoint = cell.NewXCoordinate;
+                pointsCoordinates.SecondXPoint = lion.CoordinateX;
+                pointsCoordinates.FirstYPoint = cell.NewYCoordinate;
+                pointsCoordinates.SecondYPoint = lion.CoordinateY;
+
+                distance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
+
+                if (maxDistance < distance)
+                {
+                    maxDistance = distance;
+                    farthestFreeCellIndex = counter;
+                }
+                counter++;
+            }
+
+            return farthestFreeCellIndex;
         }
     }
 }

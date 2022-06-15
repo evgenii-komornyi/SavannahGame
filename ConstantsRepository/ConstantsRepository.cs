@@ -17,14 +17,6 @@
         public const string AddLionDescription = "L Button - Add a lion;";
         #endregion
 
-        #region Numbers
-        public const int Zero = 0;
-        public const int One = 1;
-        public const int Two = 2;
-        public const int Three = 3;
-        public const int Four = 4;
-        #endregion
-
         #region AnimalSettings
         public const int LionVision = 2;
         public const int AntilopeVision = 2;
@@ -34,8 +26,8 @@
         public const int ColumnsCount = 15;
         public const int RowsCount = 10;
 
-        public const int BorderWidth = ColumnsCount + Three;
-        public const int BorderHeight = RowsCount + One;
+        public const int BorderWidth = ColumnsCount + 3;
+        public const int BorderHeight = RowsCount + 1;
 
         public const string UpLeftCorner = "╔";
         public const string UpRightCorner = "╗";
@@ -44,8 +36,8 @@
         public const string UpDownWall = "═";
         public const string LeftRightWall = "║";
 
-        public const int OffsetX = Three;
-        public const int OffsetY = One;
+        public const int OffsetX = 3;
+        public const int OffsetY = 1;
 
         public const string EmptyCell = ".";
 
@@ -56,8 +48,8 @@
         #endregion
 
         #region WindowSettings
-        public const int MaximizedWindowSize = Three;
-        public const int Disabled = Zero;
+        public const int MaximizedWindowSize = 3;
+        public const int Disabled = 0;
         public const int ConsoleSize = 61440;
         #endregion
 

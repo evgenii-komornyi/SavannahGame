@@ -23,7 +23,7 @@ namespace GameEngine
         /// Fills the board with animals
         /// </summary>
         /// <param name="animals">Animals to fill the board.</param>
-        public void FillBoardWithAnimals(List<IAnimal> animals)
+        public void FillBoardWithAnimals(List<Animal> animals)
         {
             foreach (var animal in animals)
             {
@@ -35,9 +35,9 @@ namespace GameEngine
         /// Changes current animal with empty cell on the next move.
         /// </summary>
         /// <param name="animals">Animals.</param>
-        public void ChangeAnimalWithEmptyCell(List<IAnimal> animals)
+        public void ChangeAnimalWithEmptyCell(List<Animal> animals)
         {
-            foreach (IAnimal animal in animals)
+            foreach (Animal animal in animals)
             {
                 GameBoard[animal.CoordinateX, animal.CoordinateY] = ConstantsRepository.EmptyCell;
             }
@@ -63,7 +63,7 @@ namespace GameEngine
         /// </summary>
         /// <param name="animal">Animal.</param>
         /// <param name="animalLetter">Animal letter.</param>
-        private void PutAnimalOnBoard(IAnimal animal, string animalLetter)
+        private void PutAnimalOnBoard(Animal animal, string animalLetter)
         {
             GameBoard[animal.CoordinateX, animal.CoordinateY] = animalLetter;
         }

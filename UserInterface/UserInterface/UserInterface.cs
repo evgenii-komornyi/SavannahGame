@@ -82,7 +82,7 @@ namespace UI
                 ShowMessage(ConstantsRepository.UpDownWall, false);
             }
 
-            _window.SetCursorPosition(ConstantsRepository.Zero, borderHeight);
+            _window.SetCursorPosition(0, borderHeight);
             
             for (int currentColumn = 0; currentColumn < borderWidth; currentColumn++)
             {
@@ -91,7 +91,7 @@ namespace UI
 
             for (int currentRow = 0; currentRow < borderHeight; currentRow++)
             {
-                _window.SetCursorPosition(ConstantsRepository.Zero, currentRow);
+                _window.SetCursorPosition(0, currentRow);
                 ShowMessage(ConstantsRepository.LeftRightWall, false);
             }
 
@@ -130,7 +130,7 @@ namespace UI
         {
             for (int currentRow = 0; currentRow < board.GameBoard.GetLength(1); currentRow++)
             {
-                _window.SetCursorPosition(ConstantsRepository.OffsetX - ConstantsRepository.One, currentRow + ConstantsRepository.OffsetY);
+                _window.SetCursorPosition(ConstantsRepository.OffsetX - 1, currentRow + ConstantsRepository.OffsetY);
 
                 for (int currentColumn = 0; currentColumn < board.GameBoard.GetLength(0); currentColumn++)
                 {

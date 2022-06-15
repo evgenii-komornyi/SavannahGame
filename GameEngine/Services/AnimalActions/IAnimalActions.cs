@@ -13,19 +13,19 @@ namespace GameEngine.Services
         /// <param name="newAnimal">New animal.</param>
         /// <param name="animals">Animals.</param>
         /// <param name="board">Board.</param>
-        void AddAnimal(IAnimal newAnimal, List<IAnimal> animals, Board board);
+        void AddAnimal(Animal newAnimal, List<Animal> animals, Board board);
 
         /// <summary>
         /// Moves animals on the board.
         /// </summary>
         /// <param name="board">Board.</param>
         /// <param name="animals">Animals.</param>
-        void Move(Board board, List<IAnimal> animals);
-        
+        void Move(Board board, List<Animal> animals);
+
         /// <summary>
-        /// Removes all dead animals. 
+        /// Removes all dead animals from board. 
         /// </summary>
         /// <param name="animals">Animals.</param>
-        void Die(List<IAnimal> animals);
+        void ClearBoard(List<Animal> animals);
     }
 }
