@@ -16,7 +16,7 @@ namespace GameEngine
         public Board()
         {
             GameBoard = new string[ConstantsRepository.ColumnsCount, ConstantsRepository.RowsCount];
-            FillBoard();
+            ClearBoard();
         }
 
         /// <summary>
@@ -32,10 +32,10 @@ namespace GameEngine
         }
 
         /// <summary>
-        /// Changes current animal with empty cell on the next move.
+        /// Removes animal from board.
         /// </summary>
         /// <param name="animals">Animals.</param>
-        public void ChangeAnimalWithEmptyCell(List<Animal> animals)
+        public void RemoveAnimalFromBoard(List<Animal> animals)
         {
             foreach (Animal animal in animals)
             {
@@ -44,13 +44,13 @@ namespace GameEngine
         }
 
         /// <summary>
-        /// Checks coordinate X and coordinate Y on the ends of board.
+        /// Checks whether cell is on board.
         /// </summary>
         /// <param name="newXCoordinate">New X coordinate.</param>
         /// <param name="newYCoordinate">New Y coordinate.</param>
         /// <param name="currentBoard">Current board.</param>
-        /// <returns>Is the coordinates out off board.</returns>
-        public bool IsOffBoard(int newXCoordinate, int newYCoordinate, string[,] currentBoard)
+        /// <returns>Is cell on board.</returns>
+        public bool IsCellOnBoard(int newXCoordinate, int newYCoordinate, string[,] currentBoard)
         {
             return (newXCoordinate < 0) ||
                    (newXCoordinate >= currentBoard.GetLength(0)) ||
@@ -69,9 +69,9 @@ namespace GameEngine
         }
 
         /// <summary>
-        /// Fills the board with empty cells.
+        /// Clears the board.
         /// </summary>
-        private void FillBoard()
+        private void ClearBoard()
         {
             for (int currentColumn = 0; currentColumn < GameBoard.GetLength(0); currentColumn++)
             {

@@ -31,9 +31,7 @@ namespace UI
             #pragma warning restore CA1416 // Validate platform compatibility;
 
             IntPtr currentConsole = GetConsoleWindow();
-
             ShowWindow(currentConsole, ConstantsRepository.MaximizedWindowSize);
-
             IntPtr systemMenu = GetSystemMenu(currentConsole, false);
 
             if (currentConsole != IntPtr.Zero)

@@ -5,7 +5,14 @@
     /// </summary>
     public class NewAnimalCoordinates
     {
+        /// <summary>
+        /// New X coordinate.
+        /// </summary>
         public int NewXCoordinate { get; set; }
+
+        /// <summary>
+        /// New Y coordinate.
+        /// </summary>
         public int NewYCoordinate { get; set; }
     }
 }

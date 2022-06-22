@@ -144,13 +144,6 @@ namespace UI
         /// Gets input key. 
         /// </summary>
         /// <returns>Pressed button value.</returns>
-        public ConsoleKey? GetInputKey()
-        {
-            if (Console.KeyAvailable)
-            {
-                return Console.ReadKey(true).Key;
-            }
-            return null;
-        }
+        public ConsoleKey? GetInputKey() => Console.KeyAvailable ? Console.ReadKey(true).Key : null;
     }
 }

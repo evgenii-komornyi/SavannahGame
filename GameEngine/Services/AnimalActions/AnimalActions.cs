@@ -35,7 +35,7 @@ namespace GameEngine.Services
         /// <param name="animals">Animals.</param>
         private void AddAnimalToList(Animal newAnimal, List<NewAnimalCoordinates> freeCells, List<Animal> animals)
         {
-            NewAnimalCoordinates freeCoordinates = freeCells[Helper.GenerateRandomCoordinates(0, freeCells.Count)];
+            NewAnimalCoordinates freeCoordinates = freeCells[Helper.random.Next(0, freeCells.Count)];
             newAnimal.CoordinateX = freeCoordinates.NewXCoordinate;
             newAnimal.CoordinateY = freeCoordinates.NewYCoordinate;
             animals.Add(newAnimal);
@@ -55,8 +55,8 @@ namespace GameEngine.Services
             {
                 for (int newYCoordinate = 0; newYCoordinate < board.GameBoard.GetLength(1); newYCoordinate++)
                 {
-                    if (!board.IsOffBoard(newXCoordinate, newYCoordinate, board.GameBoard) &&
-                        !Helper.IsNotFreePlace(newXCoordinate, newYCoordinate, animals))
+                    if (!board.IsCellOnBoard(newXCoordinate, newYCoordinate, board.GameBoard) &&
+                        !Helper.IsCellOccupied(newXCoordinate, newYCoordinate, animals))
                     {
                         NewAnimalCoordinates newCoordinates = new NewAnimalCoordinates
                         {
@@ -91,7 +91,7 @@ namespace GameEngine.Services
         /// Removes all dead animals from board. 
         /// </summary>
         /// <param name="animals">Animals.</param>
-        public void ClearBoard(List<Animal> animals)
+        public void RemoveDeadAnimals(List<Animal> animals)
         {
             IEnumerable<Animal> deadAnimals = CheckForDead(animals);
             animals.RemoveAll(currentAnimal => deadAnimals.Contains(currentAnimal));

@@ -12,10 +12,8 @@ namespace UI
     {
         private readonly IUserInterface _userInterface;
         private readonly IWindow _window;
-        
         private readonly IAnimalActions _animalActions;
         private Board _board;
-
         List<Animal> animals = new List<Animal>();
 
         /// <summary>
@@ -25,8 +23,8 @@ namespace UI
         /// <param name="window">Window.</param>
         /// <param name="animalActions">Animal Action.</param>
         public GameManager(IUserInterface userInterface, 
-                            IWindow window, 
-                            IAnimalActions animalActions)
+                           IWindow window, 
+                           IAnimalActions animalActions)
         {
             _userInterface = userInterface;
             _window = window;
@@ -40,15 +38,11 @@ namespace UI
         public void RunApplication()
         {
             _window.WindowConfiguration();
-
             _window.ClearConsole();
             _userInterface.DrawBorders(ConstantsRepository.BorderWidth, ConstantsRepository.BorderHeight);
-
             _userInterface.DrawBoard(_board);
-
             _window.SetCursorPosition(0, 20);
             _userInterface.ShowMenuButtons();
-
             RunGame();
         }
 
@@ -61,12 +55,10 @@ namespace UI
             while (isGameOnGoing)
             {
                 _board.FillBoardWithAnimals(animals);
-
                 _userInterface.DrawBoard(_board);
-                _board.ChangeAnimalWithEmptyCell(animals);
-
+                _board.RemoveAnimalFromBoard(animals);
                 _animalActions.Move(_board, animals);
-                _animalActions.ClearBoard(animals);
+                _animalActions.RemoveDeadAnimals(animals);
                 Thread.Sleep(ConstantsRepository.ThreadSleep);
                 ConsoleKey? consoleKey = _userInterface.GetInputKey();
                 

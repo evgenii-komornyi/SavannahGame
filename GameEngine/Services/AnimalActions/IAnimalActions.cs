@@ -26,6 +26,6 @@ namespace GameEngine.Services
         /// Removes all dead animals from board. 
         /// </summary>
         /// <param name="animals">Animals.</param>
-        void ClearBoard(List<Animal> animals);
+        void RemoveDeadAnimals(List<Animal> animals);
     }
 }

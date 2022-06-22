@@ -7,27 +7,16 @@ namespace GameEngine.Services
     /// </summary>
     public class Helper
     {
-        private static Random _random = new Random();
+        public static Random random = new Random();
 
         /// <summary>
-        /// Generates a random number in the interval.
-        /// </summary>
-        /// <param name="minLimit">Min limit.</param>
-        /// <param name="maxLimit">Max limit.</param>
-        /// <returns>Random number.</returns>
-        public static int GenerateRandomCoordinates(int minLimit, int maxLimit)
-        {
-            return _random.Next(minLimit, maxLimit);
-        }
-
-        /// <summary>
-        /// Checks non-free place for new animal's step.
+        /// Checks whether cell is occupied.
         /// </summary>
         /// <param name="newXPosition">New X position.</param>
         /// <param name="newYPosition">New Y position.</param>
         /// <param name="animals">Animals.</param>
-        /// <returns>The first non-free place for animal.</returns>
-        public static bool IsNotFreePlace(int newXPosition, int newYPosition, List<Animal> animals)
+        /// <returns>Is cell occupied.</returns>
+        public static bool IsCellOccupied(int newXPosition, int newYPosition, List<Animal> animals)
         {
             return (from animal in animals
                     where animal.CoordinateX.Equals(newXPosition) &&

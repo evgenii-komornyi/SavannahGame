@@ -7,12 +7,40 @@ namespace GameEngine.Entities
     /// </summary>
     public abstract class Animal
     {
+        /// <summary>
+        /// Animal id.
+        /// </summary>
         public int Id { get; set; }
+
+        /// <summary>
+        /// Coordinate X.
+        /// </summary>
         public int CoordinateX { get; set; }
+
+        /// <summary>
+        /// Coordinate Y.
+        /// </summary>
         public int CoordinateY { get; set; }
+
+        /// <summary>
+        /// Animal type.
+        /// </summary>
         public AnimalType Type { get; set; }
+
+        /// <summary>
+        /// Animal vision.
+        /// </summary>
         public int Vision { get; set; }
+
+        /// <summary>
+        ///  Indicates animal is dead. 
+        ///  If true - animal is dead.
+        /// </summary>
         public bool IsDead { get; set; }
+
+        /// <summary>
+        /// Symbol for displaying animal on a game field.
+        /// </summary>
         public string? Letter { get; set; }
 
         private static int id = 0;
@@ -41,7 +69,7 @@ namespace GameEngine.Entities
         /// <param name="freeCellsToMove">Free cells to move.</param>
         protected void MoveToNewRandomPosition(Animal animal, List<NewAnimalCoordinates> freeCellsToMove)
         {
-            NewAnimalCoordinates nextCoordinatesToMove = freeCellsToMove[Helper.GenerateRandomCoordinates(0, freeCellsToMove.Count)];
+            NewAnimalCoordinates nextCoordinatesToMove = freeCellsToMove[Helper.random.Next(0, freeCellsToMove.Count)];
             animal.CoordinateX = nextCoordinatesToMove.NewXCoordinate;
             animal.CoordinateY = nextCoordinatesToMove.NewYCoordinate;
         }
@@ -62,8 +90,8 @@ namespace GameEngine.Entities
             {
                 for (int newYCoordinate = animal.CoordinateY - 1; newYCoordinate <= animal.CoordinateY + 1; newYCoordinate++)
                 {
-                    if (!board.IsOffBoard(newXCoordinate, newYCoordinate, board.GameBoard) &&
-                        !Helper.IsNotFreePlace(newXCoordinate, newYCoordinate, animals))
+                    if (!board.IsCellOnBoard(newXCoordinate, newYCoordinate, board.GameBoard) &&
+                        !Helper.IsCellOccupied(newXCoordinate, newYCoordinate, animals))
                     {
                         newCoordinates = new NewAnimalCoordinates
                         {
