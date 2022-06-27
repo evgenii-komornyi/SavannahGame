@@ -6,7 +6,7 @@
     public class ConstantsRepository
     {
         #region Titles
-        public const string GameTitle = "Savannah - Antilopes vs Lions";
+        public const string GameTitle = "Savannah - Herbivores vs Predators";
         #endregion
 
         #region MainMenuCommands 
@@ -17,7 +17,11 @@
 
         #region AnimalSettings
         public const int LionVision = 2;
+        public const double LionHealth = 100;
         public const int AntilopeVision = 2;
+        public const double AntilopeHealth = 100;
+        public const double HealthDecreaser = 0.5;
+        public const int RelationshipDuration = 2;
         #endregion
 
         #region BoardSettings

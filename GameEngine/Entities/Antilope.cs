@@ -1,4 +1,5 @@
-﻿using Repository;
+﻿using GameEngine.Services;
+using Repository;
 
 namespace GameEngine.Entities
 {
@@ -13,8 +14,10 @@ namespace GameEngine.Entities
         public Antilope()
         {
             Id = GenerateId();
-            Type = AnimalType.Antilope;
+            Sex = (AnimalSex)Helper.random.Next(2);
+            IsPaired = false;
             Vision = ConstantsRepository.AntilopeVision;
+            Health = ConstantsRepository.AntilopeHealth;
             IsDead = false;
             Letter = ConstantsRepository.AntilopeLetter;
         }
@@ -29,15 +32,15 @@ namespace GameEngine.Entities
         {
             Antilope antilope = (Antilope)animal;
 
-            List<Animal> lionsAround = FindAnimalsAroundByType(antilope, animals, AnimalType.Lion);
+            List<Lion> lionsAround = FindAnimalsAroundByType<Lion>(antilope, animals);
 
-            Animal? nearestLion = FindNearestLion(lionsAround, antilope);
+            Animal? nearestLion = FindNearestLion(lionsAround);
                 
             List<NewAnimalCoordinates> freeCellsToMove = CalculateCorrectPosition(board, animals, antilope);
                 
             if (nearestLion == null)
             {
-                MoveToNewRandomPosition(antilope, freeCellsToMove);
+                MakeNextMove(antilope, freeCellsToMove);
             }
             else
             {
@@ -52,15 +55,14 @@ namespace GameEngine.Entities
         /// Finds nearest lion to the antilope.
         /// </summary>
         /// <param name="lionsAround">Lions around.</param>
-        /// <param name="antilope">Antilope.</param>
         /// <returns>Nearest lion.</returns>
-        private Animal? FindNearestLion(List<Animal> lionsAround, Antilope antilope)
+        private Animal? FindNearestLion(List<Lion> lionsAround)
         {
             Animal? nearestLion = null;
 
             if (lionsAround.Count != 0)
             {
-                nearestLion = CalculateMinDistanceToLion(lionsAround, antilope);
+                nearestLion = CalculateMinDistanceToLion(lionsAround);
             }
 
             return nearestLion;
@@ -70,9 +72,8 @@ namespace GameEngine.Entities
         /// Calculates minimal distance to the lion.
         /// </summary>
         /// <param name="lionsAround">Lions around.</param>
-        /// <param name="antilope">Antilope.</param>
         /// <returns>Nearest lion to the antilope.0</returns>
-        private Animal? CalculateMinDistanceToLion(List<Animal> lionsAround, Antilope antilope)
+        private Animal? CalculateMinDistanceToLion(List<Lion> lionsAround)
         {
             double nearestLionDistance;
             int counter = 0;
@@ -81,11 +82,12 @@ namespace GameEngine.Entities
 
             foreach (var lion in lionsAround)
             {
-                PointsCoordinates pointsCoordinates = new PointsCoordinates();
-                pointsCoordinates.FirstXPoint = lion.CoordinateX;
-                pointsCoordinates.SecondXPoint = lion.CoordinateX;
-                pointsCoordinates.FirstYPoint = lion.CoordinateY;
-                pointsCoordinates.SecondYPoint = lion.CoordinateY;
+                PointsCoordinates pointsCoordinates = new PointsCoordinates
+                {
+                    FirstXPoint = lion.CoordinateX,
+                    SecondXPoint = lion.CoordinateX,
+                    FirstYPoint = lion.CoordinateY,
+                    SecondYPoint = lion.CoordinateY            };
 
                 nearestLionDistance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
 
@@ -139,11 +141,13 @@ namespace GameEngine.Entities
 
             foreach (var cell in freeCellsToMove)
             {
-                PointsCoordinates pointsCoordinates = new PointsCoordinates();
-                pointsCoordinates.FirstXPoint = cell.NewXCoordinate;
-                pointsCoordinates.SecondXPoint = lion.CoordinateX;
-                pointsCoordinates.FirstYPoint = cell.NewYCoordinate;
-                pointsCoordinates.SecondYPoint = lion.CoordinateY;
+                PointsCoordinates pointsCoordinates = new PointsCoordinates
+                {
+                    FirstXPoint = cell.NewXCoordinate,
+                    SecondXPoint = lion.CoordinateX,
+                    FirstYPoint = cell.NewYCoordinate,
+                    SecondYPoint = lion.CoordinateY
+                };
 
                 distance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
 
@@ -156,6 +160,23 @@ namespace GameEngine.Entities
             }
 
             return farthestFreeCellIndex;
+        }
+
+        /// <summary>
+        /// Gives birth of a new animal.
+        /// </summary>
+        /// <param name="board">Board.</param>
+        /// <param name="animals">Animals.</param>
+        /// <returns>New animal (child).</returns>
+        public override Animal GiveBirth(Board board, List<Animal> animals)
+        {
+            Animal child = new Antilope
+            {
+                CoordinateX = CalculateFreeCellsToBirth(board, animals).NewXCoordinate,
+                CoordinateY = CalculateFreeCellsToBirth(board, animals).NewYCoordinate
+            };
+            
+            return child;
         }
     }
 }

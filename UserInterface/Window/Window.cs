@@ -12,7 +12,7 @@ namespace UI
         private static extern bool ShowWindow(IntPtr hWnd, int cmdShow);
 
         [DllImport("user32.dll")]
-        public static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
+        private static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
@@ -25,11 +25,10 @@ namespace UI
         /// </summary>
         public void WindowConfiguration()
         {
-            Console.CursorVisible = false;
             #pragma warning disable CA1416 // Validate platform compatibility
             Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
             #pragma warning restore CA1416 // Validate platform compatibility;
-
+            
             IntPtr currentConsole = GetConsoleWindow();
             ShowWindow(currentConsole, ConstantsRepository.MaximizedWindowSize);
             IntPtr systemMenu = GetSystemMenu(currentConsole, false);
@@ -73,15 +72,6 @@ namespace UI
         public void SetCursorPosition(int left, int top)
         {
             Console.SetCursorPosition(left, top);
-        }
-
-        /// <summary>
-        /// Sets console window's title.
-        /// </summary>
-        /// <param name="title">Title.</param>
-        public void SetTitle(string title)
-        {
-            Console.Title = title;
         }
     }
 }

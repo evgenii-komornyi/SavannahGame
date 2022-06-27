@@ -9,6 +9,7 @@ namespace UI
     public class UserInterface : IUserInterface
     {
         private readonly IWindow _window;
+
         /// <summary>
         /// The class contains user interaction logic.
         /// </summary>
@@ -22,12 +23,8 @@ namespace UI
         /// Gets response in the main menu from user. 
         /// </summary>
         /// <returns>User prompt.</returns>
-        public string? GetResponseFromMenu()
-        {
-            _window.SetTitle(ConstantsRepository.GameTitle);
-            
-            return Console.ReadLine();
-        }
+        public string? GetResponseFromMenu() => Console.ReadLine();
+        
 
         /// <summary>
         /// Shows buttons and corresponding commands.
@@ -134,7 +131,7 @@ namespace UI
 
                 for (int currentColumn = 0; currentColumn < board.GameBoard.GetLength(0); currentColumn++)
                 {
-                    Console.Write(board.GameBoard[currentColumn, currentRow]);
+                    ShowMessage(board.GameBoard[currentColumn, currentRow], false);
                     _window.SetCursorPosition(ConstantsRepository.OffsetX + currentColumn, currentRow + ConstantsRepository.OffsetY);
                 }
             }

@@ -35,7 +35,7 @@ namespace GameEngine
         /// Removes animal from board.
         /// </summary>
         /// <param name="animals">Animals.</param>
-        public void RemoveAnimalFromBoard(List<Animal> animals)
+        public void RemovAnimalFromBoard(List<Animal> animals)
         {
             foreach (Animal animal in animals)
             {
