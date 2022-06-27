@@ -27,10 +27,11 @@ namespace UI
         /// <param name="window">Window.</param>
         /// <param name="animalActions">Animal Action.</param>
         /// <param name="pairManager">Pair manager.</param>
-        public GameManager(IUserInterface userInterface,
-                           IWindow window,
-                           IAnimalActions animalActions,
-                           IPairManager pairManager)
+        public GameManager(
+            IUserInterface userInterface,
+            IWindow window,
+            IAnimalActions animalActions,
+            IPairManager pairManager)
         {
             _userInterface = userInterface;
             _window = window;
@@ -71,17 +72,20 @@ namespace UI
                 _board.FillBoardWithAnimals(_animals);
 
                 _userInterface.DrawBoard(_board);
-                _board.RemovAnimalFromBoard(_animals);
+                _board.RemoveAnimalFromBoard(_animals);
 
                 _animalActions.Move(_board, _animals);
 
-                RemoveNonExistsPairs(_pairs);
+                _pairManager.RemoveNonExistsPairs(_pairs);
 
                 _pairManager.CheckPairForExistence(_pairs, _board, _animals, _childs);
 
                 _pairManager.CreatePair(_animals);
 
-                if (currentPair != null) _pairs.Add(currentPair);
+                if (currentPair != null)
+                {
+                    _pairs.Add(currentPair);
+                }
 
                 _animalActions.AddChilds(_animals, _childs);
                 _childs.Clear();
@@ -89,7 +93,7 @@ namespace UI
                 _animalActions.RemoveDeadAnimals(_animals);
                 Thread.Sleep(ConstantsRepository.ThreadSleep);
                 ConsoleKey? consoleKey = _userInterface.GetInputKey();
-                
+
                 switch (consoleKey)
                 {
                     case ConsoleKey.A:
@@ -102,30 +106,6 @@ namespace UI
 
                 isGameOnGoing = (consoleKey != ConsoleKey.Q && consoleKey != ConsoleKey.Escape);
             }
-        }
-
-        /// <summary>
-        /// Removes pairs that end their existence. 
-        /// </summary>
-        private void RemoveNonExistsPairs(List<Pair> pairs)
-        {
-            if (pairs.Count != 0)
-            {
-                IEnumerable<Pair> doesNotExistingPairs = CheckForExistingPairs(pairs);
-                _pairs.RemoveAll(currentAnimal => doesNotExistingPairs.Contains(currentAnimal));
-            }
-        }
-
-        /// <summary>
-        /// Checks the dead animals.
-        /// </summary>
-        /// <param name="pairs">Animals.</param>
-        /// <returns>Enumerable list of the dead animals.</returns>
-        private IEnumerable<Pair> CheckForExistingPairs(List<Pair> pairs)
-        {
-            return from currentPair in pairs
-                   where !currentPair.IsPairExist
-                   select currentPair;
         }
     }
 }

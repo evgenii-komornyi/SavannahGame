@@ -21,7 +21,7 @@ namespace GameEngine.Entities
         /// <summary>
         /// Coordinate Y.
         /// </summary>
-        public int CoordinateY { get; set; }        
+        public int CoordinateY { get; set; }
 
         /// <summary>
         /// Animal sex.
@@ -61,10 +61,7 @@ namespace GameEngine.Entities
         /// Generates new id.
         /// </summary>
         /// <returns>Incremented id.</returns>
-        protected int GenerateId()
-        {
-            return id++;
-        }
+        protected int GenerateId() => id++;
 
         /// <summary>
         /// Moves current animal on the board.
@@ -110,10 +107,7 @@ namespace GameEngine.Entities
         /// </summary>
         /// <param name="currentAnimal">Current animal.</param>
         /// <returns>Decreased health.</returns>
-        private double DecreaseHealth(Animal currentAnimal)
-        {
-            return currentAnimal.Health -= ConstantsRepository.HealthDecreaser;
-        }
+        private double DecreaseHealth(Animal currentAnimal) => currentAnimal.Health -= ConstantsRepository.HealthDecreaser;
 
         /// <summary>
         /// Makes the animal dead.

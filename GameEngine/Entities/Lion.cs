@@ -196,10 +196,12 @@ namespace GameEngine.Entities
         /// <returns>New animal (child).</returns>
         public override Animal GiveBirth(Board board, List<Animal> animals)
         {
-            Animal child = new Lion();
-            child.CoordinateX = CalculateFreeCellsToBirth(board, animals).NewXCoordinate;
-            child.CoordinateY = CalculateFreeCellsToBirth(board, animals).NewYCoordinate;
-
+            Animal child = new Lion
+            {
+                CoordinateX = CalculateFreeCellsToBirth(board, animals).NewXCoordinate,
+                CoordinateY = CalculateFreeCellsToBirth(board, animals).NewYCoordinate
+            };
+            
             return child;
         }
     }

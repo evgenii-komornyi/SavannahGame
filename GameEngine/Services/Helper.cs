@@ -10,7 +10,7 @@ namespace GameEngine.Services
         public static Random random = new Random();
 
         /// <summary>
-        /// Checks whhether cell is occupied.
+        /// Checks whether cell is occupied.
         /// </summary>
         /// <param name="newXPosition">New X position.</param>
         /// <param name="newYPosition">New Y position.</param>
