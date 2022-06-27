@@ -22,9 +22,10 @@ namespace UI
         /// <param name="userInterface">User Interface.</param>
         /// <param name="window">Window.</param>
         /// <param name="animalActions">Animal Action.</param>
-        public GameManager(IUserInterface userInterface, 
-                           IWindow window, 
-                           IAnimalActions animalActions)
+        public GameManager(
+            IUserInterface userInterface, 
+            IWindow window, 
+            IAnimalActions animalActions)
         {
             _userInterface = userInterface;
             _window = window;
