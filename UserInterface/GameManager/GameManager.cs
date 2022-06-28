@@ -18,7 +18,7 @@ namespace UI
         private Board _board;
         private List<Animal> _animals;
         private List<Pair> _pairs;
-        private List<Animal> _childs;
+        private List<Animal> _children;
 
         /// <summary>
         /// The class contains all logic layer to start a game from User Interface.
@@ -40,7 +40,7 @@ namespace UI
             _board = new Board();
             _animals = new List<Animal>();
             _pairs = new List<Pair>();
-            _childs = new List<Animal>();
+            _children = new List<Animal>();
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace UI
 
                 _pairManager.RemoveNonExistsPairs(_pairs);
 
-                _pairManager.CheckPairForExistence(_pairs, _board, _animals, _childs);
+                _pairManager.CheckPairForExistence(_pairs, _board, _animals, _children);
 
                 _pairManager.CreatePair(_animals);
 
@@ -87,8 +87,8 @@ namespace UI
                     _pairs.Add(currentPair);
                 }
 
-                _animalActions.AddChilds(_animals, _childs);
-                _childs.Clear();
+                _animalActions.AddChildren(_animals, _children);
+                _children.Clear();
 
                 _animalActions.RemoveDeadAnimals(_animals);
                 Thread.Sleep(ConstantsRepository.ThreadSleep);

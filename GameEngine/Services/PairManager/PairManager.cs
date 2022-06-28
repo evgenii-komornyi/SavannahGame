@@ -54,8 +54,8 @@ namespace GameEngine.Services.PairManager
         /// <param name="pairs">Pairs.</param>
         /// <param name="board">Board.</param>
         /// <param name="animals">Animals.</param>
-        /// <param name="childs">Childs.</param>
-        public void CheckPairForExistence(List<Pair> pairs, Board board, List<Animal> animals, List<Animal> childs)
+        /// <param name="children">Childs.</param>
+        public void CheckPairForExistence(List<Pair> pairs, Board board, List<Animal> animals, List<Animal> children)
         {
             foreach (var pair in pairs)
             {
@@ -74,7 +74,7 @@ namespace GameEngine.Services.PairManager
                         if (pair.RelationshipDuration == ConstantsRepository.RelationshipDuration)
                         {
                             Animal child = pair.GiveBirth(board, animals, pairs);
-                            childs.Add(child);
+                            children.Add(child);
                             pair.RelationshipDuration = 0;
                         }
                     }

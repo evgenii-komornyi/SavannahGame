@@ -55,10 +55,10 @@ namespace GameEngine.Services
         /// Adds borned childs to common animals' list.
         /// </summary>
         /// <param name="animals">Animals.</param>
-        /// <param name="childs">Childs.</param>
-        public void AddChilds(List<Animal> animals, List<Animal> childs)
+        /// <param name="children">Children.</param>
+        public void AddChildren(List<Animal> animals, List<Animal> children)
         {
-            animals.AddRange(childs);
+            animals.AddRange(children);
         } 
 
         /// <summary>

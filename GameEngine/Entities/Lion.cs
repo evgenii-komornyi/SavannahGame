@@ -194,13 +194,19 @@ namespace GameEngine.Entities
         /// <param name="board">Board.</param>
         /// <param name="animals">Animals.</param>
         /// <returns>New animal (child).</returns>
-        public override Animal GiveBirth(Board board, List<Animal> animals)
+        public override Animal? GiveBirth(Board board, List<Animal> animals)
         {
-            Animal child = new Lion
+            NewAnimalCoordinates birthCoordinates = CalculateFreeCellsToBirth(board, animals);
+            Animal? child = null;
+
+            if (birthCoordinates != null)
             {
-                CoordinateX = CalculateFreeCellsToBirth(board, animals).NewXCoordinate,
-                CoordinateY = CalculateFreeCellsToBirth(board, animals).NewYCoordinate
-            };
+                child = new Lion
+                {
+                    CoordinateX = birthCoordinates.NewXCoordinate,
+                    CoordinateY = birthCoordinates.NewYCoordinate
+                };
+            }
             
             return child;
         }

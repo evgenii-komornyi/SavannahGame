@@ -77,7 +77,7 @@ namespace GameEngine.Entities
         /// <param name="board">Board.</param>
         /// <param name="animals">Animals.</param>
         /// <returns>New animal (child).</returns>
-        public abstract Animal GiveBirth(Board board, List<Animal> animals);
+        public abstract Animal? GiveBirth(Board board, List<Animal> animals);
 
         /// <summary>
         /// Makes next move of animal.
@@ -168,9 +168,9 @@ namespace GameEngine.Entities
         /// <param name="board">Board.</param>
         /// <param name="animals">Animals.</param>
         /// <returns>New animal coordinates for child.</returns>
-        protected NewAnimalCoordinates CalculateFreeCellsToBirth(Board board, List<Animal> animals)
+        protected NewAnimalCoordinates? CalculateFreeCellsToBirth(Board board, List<Animal> animals)
         {
-            NewAnimalCoordinates newCoordinates = new NewAnimalCoordinates();
+            NewAnimalCoordinates? newCoordinates = null;
 
             for (int newXCoordinate = CoordinateX - 1; newXCoordinate <= CoordinateX + 1; newXCoordinate++)
             {
@@ -179,8 +179,11 @@ namespace GameEngine.Entities
                     if (!board.IsCellOnBoard(newXCoordinate, newYCoordinate, board.GameBoard) &&
                         !Helper.IsCellOccupied(newXCoordinate, newYCoordinate, animals))
                     {
-                        newCoordinates.NewXCoordinate = newXCoordinate;
-                        newCoordinates.NewYCoordinate = newYCoordinate;
+                        newCoordinates = new NewAnimalCoordinates
+                        {
+                            NewXCoordinate = newXCoordinate,
+                            NewYCoordinate = newYCoordinate
+                        };
                     
                         break;
                     }

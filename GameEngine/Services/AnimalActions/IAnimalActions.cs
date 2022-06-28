@@ -19,8 +19,8 @@ namespace GameEngine.Services
         /// Adds borned childs to common animals' list.
         /// </summary>
         /// <param name="animals">Animals.</param>
-        /// <param name="childs">Childs.</param>
-        void AddChilds(List<Animal> animals, List<Animal> childs);
+        /// <param name="children">Children.</param>
+        void AddChildren(List<Animal> animals, List<Animal> children);
 
         /// <summary>
         /// Moves animals on the board.
