@@ -25,7 +25,10 @@ namespace GameEngine.Services.PairManager
                 {
                     List<Animal> animalsAround = Helper.LookAround(currentAnimal, animals).ToList();
 
-                    List<Animal> freeOppositeSexAnimalsAround = animalsAround.Where(animal => !animal.Sex.Equals(currentAnimal.Sex) && !animal.IsPaired).Select(animal => animal).ToList();
+                    List<Animal> freeOppositeSexAnimalsAround = animalsAround
+                        .Where(animal => !animal.Sex.Equals(currentAnimal.Sex) && !animal.IsPaired && animal.GetType() == currentAnimal.GetType())
+                        .Select(animal => animal)
+                        .ToList();
 
                     Animal? animalToPair = freeOppositeSexAnimalsAround.FirstOrDefault();
 
