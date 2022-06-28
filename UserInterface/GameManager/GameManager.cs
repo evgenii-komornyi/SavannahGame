@@ -1,4 +1,4 @@
-﻿using GameEngine;
+using GameEngine;
 using GameEngine.Entities;
 using GameEngine.Services;
 using Repository;
