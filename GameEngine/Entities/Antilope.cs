@@ -87,7 +87,8 @@ namespace GameEngine.Entities
                     FirstXPoint = lion.CoordinateX,
                     SecondXPoint = lion.CoordinateX,
                     FirstYPoint = lion.CoordinateY,
-                    SecondYPoint = lion.CoordinateY            };
+                    SecondYPoint = lion.CoordinateY
+                };
 
                 nearestLionDistance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
 

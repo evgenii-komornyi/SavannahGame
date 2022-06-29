@@ -154,7 +154,7 @@ namespace GameEngine.Entities
                     SecondXPoint = antilope.CoordinateX,
                     FirstYPoint = cell.NewYCoordinate,
                     SecondYPoint = antilope.CoordinateY
-            };
+                };
 
                 distance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
 
