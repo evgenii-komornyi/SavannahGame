@@ -34,7 +34,7 @@ namespace GameEngine.Entities
 
             List<Lion> lionsAround = FindAnimalsAroundByType<Lion>(antilope, animals);
 
-            Animal? nearestLion = FindNearestLion(lionsAround);
+            Animal? nearestLion = FindNearestLion(lionsAround, antilope);
                 
             List<NewAnimalCoordinates> freeCellsToMove = CalculateCorrectPosition(board, animals, antilope);
                 
@@ -56,13 +56,13 @@ namespace GameEngine.Entities
         /// </summary>
         /// <param name="lionsAround">Lions around.</param>
         /// <returns>Nearest lion.</returns>
-        private Animal? FindNearestLion(List<Lion> lionsAround)
+        private Animal? FindNearestLion(List<Lion> lionsAround, Animal antilope)
         {
             Animal? nearestLion = null;
 
             if (lionsAround.Count != 0)
             {
-                nearestLion = CalculateMinDistanceToLion(lionsAround);
+                nearestLion = CalculateMinDistanceToLion(lionsAround, antilope);
             }
 
             return nearestLion;
@@ -73,7 +73,7 @@ namespace GameEngine.Entities
         /// </summary>
         /// <param name="lionsAround">Lions around.</param>
         /// <returns>Nearest lion to the antilope.0</returns>
-        private Animal? CalculateMinDistanceToLion(List<Lion> lionsAround)
+        private Animal? CalculateMinDistanceToLion(List<Lion> lionsAround, Animal antilope)
         {
             double nearestLionDistance;
             int counter = 0;
@@ -84,9 +84,9 @@ namespace GameEngine.Entities
             {
                 PointsCoordinates pointsCoordinates = new PointsCoordinates
                 {
-                    FirstXPoint = lion.CoordinateX,
+                    FirstXPoint = antilope.CoordinateX,
                     SecondXPoint = lion.CoordinateX,
-                    FirstYPoint = lion.CoordinateY,
+                    FirstYPoint = antilope.CoordinateY,
                     SecondYPoint = lion.CoordinateY
                 };
 
