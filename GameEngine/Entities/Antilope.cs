@@ -72,6 +72,7 @@ namespace GameEngine.Entities
         /// Calculates minimal distance to the lion.
         /// </summary>
         /// <param name="lionsAround">Lions around.</param>
+        /// <param name="antilope">Antilope.</param>
         /// <returns>Nearest lion to the antilope.0</returns>
         private Animal? CalculateMinDistanceToLion(List<Lion> lionsAround, Animal antilope)
         {
