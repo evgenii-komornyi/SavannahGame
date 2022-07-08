@@ -1,4 +1,5 @@
-﻿using GameEngine.Services;
+﻿using GameEngine.Entities.Interfaces;
+using GameEngine.Services;
 using Repository;
 
 namespace GameEngine.Entities
@@ -6,7 +7,7 @@ namespace GameEngine.Entities
     /// <summary>
     /// The class contains all common properties and behaviour of the animals.
     /// </summary>
-    public abstract class Animal
+    public abstract class Animal : IAnimal
     {
         /// <summary>
         /// Animal id.
@@ -67,9 +68,8 @@ namespace GameEngine.Entities
         /// Moves current animal on the board.
         /// </summary>
         /// <param name="board">Board.</param>
-        /// <param name="animal">Animal.</param>
         /// <param name="animals">Animals.</param>
-        public abstract void MoveAnimal(Board board, Animal animal, List<Animal> animals);
+        public abstract void MoveAnimal(Board board, List<Animal> animals);
 
         /// <summary>
         /// Gives birth of a new animal.
@@ -191,30 +191,6 @@ namespace GameEngine.Entities
             }
             
             return newCoordinates;
-        }
-
-        /// <summary>
-        /// Finds animals around by type.
-        /// </summary>
-        /// <param name="animalTarget">Animal target.</param>
-        /// <param name="allAnimals">All animals.</param>
-        /// <returns>Animals around by type.</returns>
-        protected List<T> FindAnimalsAroundByType<T>(Animal animalTarget, List<Animal> allAnimals) where T : Animal
-        {
-            IEnumerable<Animal> animalsAround = Helper.LookAround(animalTarget, allAnimals, animalTarget.Vision);
-
-            return animalsAround.Where(animal => typeof(T).IsAssignableTo(animal.GetType()) && !animal.IsDead).Select(animal => (T)animal).ToList();
-        }      
-
-        /// <summary>
-        /// Calculates square distance by Pythagorian theorem.
-        /// </summary>
-        /// <param name="pointsCoordinates">Points coordinates.</param>
-        /// <returns>Square distance.</returns>
-        protected double CalculateSquareDistanceByPythagoras(PointsCoordinates pointsCoordinates)
-        {
-            return Math.Pow(pointsCoordinates.FirstXPoint - pointsCoordinates.SecondXPoint, 2) +
-                Math.Pow(pointsCoordinates.FirstYPoint - pointsCoordinates.SecondYPoint, 2);
         }
     }
 }

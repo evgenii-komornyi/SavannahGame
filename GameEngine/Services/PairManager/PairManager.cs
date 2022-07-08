@@ -1,4 +1,5 @@
 ﻿using GameEngine.Entities;
+using GameEngine.Entities.Interfaces;
 using Repository;
 
 namespace GameEngine.Services.PairManager
@@ -23,14 +24,13 @@ namespace GameEngine.Services.PairManager
             {
                 if (!currentAnimal.IsPaired)
                 {
-                    List<Animal> animalsAround = Helper.LookAround(currentAnimal, animals).ToList();
+                    List<IAnimal> animalsAround = Helper.LookAround(currentAnimal, animals).ToList();
 
-                    List<Animal> freeOppositeSexAnimalsAround = animalsAround
+                    List<IAnimal> freeOppositeSexAnimalsAround = animalsAround
                         .Where(animal => !animal.Sex.Equals(currentAnimal.Sex) && !animal.IsPaired && animal.GetType() == currentAnimal.GetType())
-                        .Select(animal => animal)
                         .ToList();
 
-                    Animal? animalToPair = freeOppositeSexAnimalsAround.FirstOrDefault();
+                    IAnimal? animalToPair = freeOppositeSexAnimalsAround.FirstOrDefault();
 
                     if (animalToPair == null)
                     {
@@ -91,7 +91,7 @@ namespace GameEngine.Services.PairManager
         /// <param name="currentAnimal">Current animal.</param>
         /// <param name="pairAnimal">Animal in pair.</param>
         /// <returns>True if animal is still nearby.</returns>
-        private bool IsAnimalStillNear(Animal currentAnimal, Animal pairAnimal)
+        private bool IsAnimalStillNear(IAnimal currentAnimal, IAnimal pairAnimal)
         {
             return Math.Abs(currentAnimal.CoordinateX - pairAnimal.CoordinateX) <= 1 &&
                    Math.Abs(currentAnimal.CoordinateY - pairAnimal.CoordinateY) <= 1;

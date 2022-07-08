@@ -1,4 +1,5 @@
 ﻿using GameEngine.Entities;
+using GameEngine.Entities.Interfaces;
 
 namespace GameEngine.Services
 {
@@ -28,11 +29,136 @@ namespace GameEngine.Services
         /// <param name="allAnimals">All animals.</param>
         /// <param name="vision">How many cells animal can sense other animals.</param>
         /// <returns>Enumerable list with nearby animals.</returns>
-        public static IEnumerable<Animal> LookAround(Animal currentAnimal, IEnumerable<Animal> allAnimals, int vision = 1)
+        public static IEnumerable<IAnimal> LookAround(Animal currentAnimal, IEnumerable<Animal> allAnimals, int vision = 1)
         {
             return from animalForSearch in allAnimals
                    where AnimalsAreInRange(currentAnimal, animalForSearch, vision)
                    select animalForSearch;
+        }
+
+        /// <summary>
+        /// Finds animals around by type.
+        /// </summary>
+        /// <param name="animalsAround">Animals around.</param>
+        /// <returns>Animals around by type.</returns>
+        public static List<T> FindAnimalsAroundByType<T>(List<IAnimal> animalsAround) where T : IAnimal
+        {
+            List<T> result = animalsAround.Where(animal => typeof(T).IsAssignableFrom(animal.GetType()) && !animal.IsDead).Select(animal => (T)animal).ToList();
+            return result;
+        }
+
+        
+
+        /// <summary>
+        /// Calculates square distance by Pythagorian theorem.
+        /// </summary>
+        /// <param name="pointsCoordinates">Points coordinates.</param>
+        /// <returns>Square distance.</returns>
+        private static double CalculateSquareDistanceByPythagoras(PointsCoordinates pointsCoordinates)
+        {
+            return Math.Pow(pointsCoordinates.FirstXPoint - pointsCoordinates.SecondXPoint, 2) +
+                Math.Pow(pointsCoordinates.FirstYPoint - pointsCoordinates.SecondYPoint, 2);
+        }
+
+        /// <summary>
+        /// Finds the nearest prey to predator's position.
+        /// </summary>
+        /// <param name="preysAround">Preys around.</param>
+        /// <returns>Nearest prey to hunt.</returns>
+        public static IPrey? FindNearestPrey(List<IPrey> preysAround, IPredator predator)
+        {
+            IPrey? nearestPrey = null;
+
+            if (preysAround.Count != 0)
+            {
+                nearestPrey = CalculateMinDistanceToPrey(preysAround, predator);
+            }
+
+            return nearestPrey;
+        }
+
+        /// <summary>
+        /// Calculates minimal distance to the prey by free cells.
+        /// </summary>
+        /// <param name="freeCellsToMove">Free cells to move.</param>
+        /// <param name="prey">Prey.</param>
+        /// <returns>Index of minimal distance cell.</returns>
+        public static int CalculateMinDistanceToPreyByFreeCells(List<NewAnimalCoordinates> freeCellsToMove, IPrey prey)
+        {
+            double distance;
+            int counter = 0;
+            int nearestFreeCellIndex = 0;
+            double minDistance = Double.MaxValue;
+
+            foreach (var cell in freeCellsToMove)
+            {
+                PointsCoordinates pointsCoordinates = new PointsCoordinates
+                {
+                    FirstXPoint = cell.NewXCoordinate,
+                    SecondXPoint = prey.CoordinateX,
+                    FirstYPoint = cell.NewYCoordinate,
+                    SecondYPoint = prey.CoordinateY
+                };
+
+                distance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
+
+                if (minDistance > distance)
+                {
+                    minDistance = distance;
+                    nearestFreeCellIndex = counter;
+                }
+                counter++;
+            }
+
+            return nearestFreeCellIndex;
+        }
+
+        /// <summary>
+        /// Calculates minimal distance to the prey among preys in the predator's vision by Pythagoryan theorem. 
+        /// </summary>
+        /// <param name="preysAround">Preys are around.</param>
+        /// <param name="predator">Predator.</param>
+        /// <returns>Nearest prey to predator.</returns>
+        private static IPrey? CalculateMinDistanceToPrey(List<IPrey> preysAround, IPredator predator)
+        {
+            double distance;
+            int counter = 0;
+            int nearestPreyIndex = 0;
+            double minPreyDistance = Double.MaxValue;
+
+            foreach (var prey in preysAround)
+            {
+                PointsCoordinates pointsCoordinates = new PointsCoordinates
+                {
+                    FirstXPoint = predator.CoordinateX,
+                    SecondXPoint = prey.CoordinateX,
+                    FirstYPoint = predator.CoordinateY,
+                    SecondYPoint = prey.CoordinateY
+                };
+
+                distance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
+
+                if (minPreyDistance > distance)
+                {
+                    minPreyDistance = distance;
+                    nearestPreyIndex = counter;
+                }
+                counter++;
+            }
+
+            return preysAround[nearestPreyIndex];
+        }
+
+        /// <summary>
+        /// Checks the prey far the predator.
+        /// </summary>
+        /// <param name="preyToHunt">Far prey to hunt.</param>
+        /// <param name="predator">Predator.</param>
+        /// <returns>Is prey far.</returns>
+        public static bool IsPreyFar(IPrey preyToHunt, IPredator predator)
+        {
+            return Math.Abs(predator.CoordinateX - preyToHunt.CoordinateX) > 1 ||
+                   Math.Abs(predator.CoordinateY - preyToHunt.CoordinateY) > 1;
         }
 
         /// <summary>
@@ -78,6 +204,108 @@ namespace GameEngine.Services
         {
             return animal.CoordinateX.Equals(newXPosition) &&
                          animal.CoordinateY.Equals(newYPosition);
+        }
+
+        /// <summary>
+        /// Finds nearest predator to the prey.
+        /// </summary>
+        /// <param name="predatorsAround">Predators around.</param>
+        /// <param name="prey">Prey.</param>
+        /// <returns>Nearest predator.</returns>
+        public static IPredator? FindNearestPredator(List<IPredator> predatorsAround, IPrey prey)
+        {
+            IPredator? nearestPredator = null;
+
+            if (predatorsAround.Count != 0)
+            {
+                nearestPredator = CalculateMinDistanceToPredator(predatorsAround, prey);
+            }
+
+            return nearestPredator;
+        }
+
+        /// <summary>
+        /// Calculates minimal distance to the predator.
+        /// </summary>
+        /// <param name="predatorsAround">Predators around.</param>
+        /// <param name="prey">Prey.</param>
+        /// <returns>Nearest predator to the prey.</returns>
+        private static IPredator? CalculateMinDistanceToPredator(List<IPredator> predatorsAround, IPrey prey)
+        {
+            double nearestPredatorDistance;
+            int counter = 0;
+            int nearestPredatorIndex = 0;
+            double minPredatorDistance = Double.MaxValue;
+
+            foreach (var predator in predatorsAround)
+            {
+                PointsCoordinates pointsCoordinates = new PointsCoordinates
+                {
+                    FirstXPoint = prey.CoordinateX,
+                    SecondXPoint = predator.CoordinateX,
+                    FirstYPoint = prey.CoordinateY,
+                    SecondYPoint = predator.CoordinateY
+                };
+
+                nearestPredatorDistance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
+
+                if (minPredatorDistance > nearestPredatorDistance)
+                {
+                    minPredatorDistance = nearestPredatorDistance;
+                    nearestPredatorIndex = counter;
+                }
+                counter++;
+            }
+
+            return predatorsAround[nearestPredatorIndex];
+        }
+
+        /// <summary>
+        /// Checks the nearest predator to prey.
+        /// </summary>
+        /// <param name="nearestPredator">Nearest predator.</param>
+        /// <param name="prey">Prey.</param>
+        /// <returns>Is predator near.</returns>
+        public static bool IsPredatorNear(IPredator nearestPredator, Animal prey)
+        {
+            return Math.Abs(prey.CoordinateX - nearestPredator.CoordinateX) < 2 ||
+                   Math.Abs(prey.CoordinateY - nearestPredator.CoordinateY) < 2;
+        }
+
+        /// <summary>
+        /// Calculates maximal distance to the predator by free cells.
+        /// </summary>
+        /// <param name="freeCellsToMove">Free cells to move.</param>
+        /// <param name="predator">Predator.</param>
+        /// <returns>Index of maximal distance cell.</returns>
+        public static int CalculateMaxDistanceFromPredatorByFreeCells(List<NewAnimalCoordinates> freeCellsToMove, IPredator predator)
+        {
+            double distance;
+            int counter = 0;
+            int farthestFreeCellIndex = 0;
+            double maxDistance = 0;
+
+            foreach (var cell in freeCellsToMove)
+            {
+                PointsCoordinates pointsCoordinates = new PointsCoordinates
+                {
+                    FirstXPoint = cell.NewXCoordinate,
+                    SecondXPoint = predator.CoordinateX,
+                    FirstYPoint = cell.NewYCoordinate,
+                    SecondYPoint = predator.CoordinateY
+                };
+
+                distance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
+
+                if (maxDistance < distance)
+                {
+                    maxDistance = distance;
+                    farthestFreeCellIndex = counter;
+                }
+                counter++;
+            }
+
+            return farthestFreeCellIndex;
         }
     }
 }

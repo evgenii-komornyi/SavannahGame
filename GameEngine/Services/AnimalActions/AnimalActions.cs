@@ -102,7 +102,7 @@ namespace GameEngine.Services
             {
                 if (!IsAnimalDead(animal))
                 {
-                    animal.MoveAnimal(board, animal, animals);
+                    animal.MoveAnimal(board, animals);
                 }
             }  
         }

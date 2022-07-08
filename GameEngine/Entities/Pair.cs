@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Entities
+﻿using GameEngine.Entities.Interfaces;
+
+namespace GameEngine.Entities
 {
     /// <summary>
     /// Pair entity.
@@ -8,12 +10,12 @@
         /// <summary>
         /// First animal in pair.
         /// </summary>
-        public Animal? FirstAnimal { get; set; }
+        public IAnimal? FirstAnimal { get; set; }
 
         /// <summary>
         /// Second animal in pair.
         /// </summary>
-        public Animal? SecondAnimal { get; set; }
+        public IAnimal? SecondAnimal { get; set; }
 
         /// <summary>
         /// Relationship duration. 
@@ -41,11 +43,11 @@
             {
                 if (animal.FirstAnimal.Sex.Equals(AnimalSex.Female))
                 {
-                    female = animal.FirstAnimal;
+                    female = (Animal) animal.FirstAnimal;
                 }
                 else
                 {
-                    female = animal.SecondAnimal;
+                    female = (Animal) animal.SecondAnimal;
                 }
             }
 

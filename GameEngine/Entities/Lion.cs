@@ -1,4 +1,5 @@
-﻿using GameEngine.Services;
+﻿using GameEngine.Entities.Interfaces;
+using GameEngine.Services;
 using Repository;
 
 namespace GameEngine.Entities
@@ -6,7 +7,7 @@ namespace GameEngine.Entities
     /// <summary>
     /// Lion entity.
     /// </summary>
-    public class Lion : Animal
+    public class Lion : Animal, IPredator
     {
         /// <summary>
         /// Lion entity.
@@ -26,165 +27,60 @@ namespace GameEngine.Entities
         /// Moves current animal on the board.
         /// </summary>
         /// <param name="board">Board.</param>
-        /// <param name="animal">Animal.</param>
         /// <param name="animals">Animals.</param>
-        public override void MoveAnimal(Board board, Animal animal, List<Animal> animals)
+        public override void MoveAnimal(Board board, List<Animal> animals)
         {
-            Lion lion = (Lion)animal;
+            List<IAnimal> animalsAround = Helper.LookAround(this, animals, Vision).ToList();
 
-            List<Antilope> antilopesAround = FindAnimalsAroundByType<Antilope>(lion, animals);
+            List<IPrey> preysAround = Helper.FindAnimalsAroundByType<IPrey>(animalsAround);
 
-            Animal? antilopeToHunt = FindNearestAntilope(antilopesAround, lion);
+            IPrey? preyToHunt = Helper.FindNearestPrey(preysAround, this);
 
-            List<NewAnimalCoordinates> freeCellsToMove = CalculateCorrectPosition(board, animals, lion);
+            List<NewAnimalCoordinates> freeCellsToMove = CalculateCorrectPosition(board, animals, this);
 
-            if (antilopeToHunt == null)
+            if (preyToHunt == null)
             {
-                MakeNextMove(lion, freeCellsToMove);
+                MakeNextMove(this, freeCellsToMove);
             }
             else
             {
-                if (IsAntilopeFar(lion, antilopeToHunt))
+                if (Helper.IsPreyFar(preyToHunt, this))
                 {
-                    HuntAntilope(antilopeToHunt, lion, freeCellsToMove);
+                    HuntPrey(preyToHunt, freeCellsToMove);
                 }
                 else
                 {
-                    EatAntilope(antilopeToHunt, lion);
+                    EatPrey(preyToHunt);
                 }
             }
         }
 
         /// <summary>
-        /// Finds the nearest antilope to lion's position.
+        /// Calculates next move of the predator when he has found the prey to hunt. 
         /// </summary>
-        /// <param name="antilopesAround">Antilopes around.</param>
-        /// <param name="lion">Lion.</param>
-        /// <returns>Nearest antilope to hunt.</returns>
-        private Animal? FindNearestAntilope(List<Antilope> antilopesAround, Lion lion)
-        {
-            Animal? nearestAntilope = null;
-
-            if (antilopesAround.Count != 0)
-            {
-                nearestAntilope = CalculateMinDistanceToAntilope(antilopesAround, lion);
-            }
-
-            return nearestAntilope;
-        }
-
-        /// <summary>
-        /// Calculates minimal distance to the antilope among antilopes in the lion's vision by Pthagoryan theorem. 
-        /// </summary>
-        /// <param name="antilopesAround">Antilopes are around.</param>
-        /// <param name="lion">Lion.</param>
-        /// <returns>Nearest antilope to lion.</returns>
-        private Animal? CalculateMinDistanceToAntilope(List<Antilope> antilopesAround, Animal lion)
-        {
-            double distance;
-            int counter = 0;
-            int nearestAntilopeIndex = 0;
-            double minAntilopeDistance = Double.MaxValue;
-
-            foreach (var antilope in antilopesAround)
-            {
-                PointsCoordinates pointsCoordinates = new PointsCoordinates
-                {
-                    FirstXPoint = lion.CoordinateX,
-                    SecondXPoint = antilope.CoordinateX,
-                    FirstYPoint = lion.CoordinateY,
-                    SecondYPoint = antilope.CoordinateY
-                };
-
-                distance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
-
-                if (minAntilopeDistance > distance)
-                {
-                    minAntilopeDistance = distance;
-                    nearestAntilopeIndex = counter;
-                }
-                counter++;
-            }
-
-            return antilopesAround[nearestAntilopeIndex];
-        }
-
-        /// <summary>
-        /// Checks the antilope far the lion.
-        /// </summary>
-        /// <param name="lion">Lion.</param>
-        /// <param name="antilopeToHunt">Far antilope to hunt.</param>
-        /// <returns>Is antilope far.</returns>
-        private bool IsAntilopeFar(Lion lion, Animal antilopeToHunt)
-        {
-            return Math.Abs(lion.CoordinateX - antilopeToHunt.CoordinateX) > 1 ||
-                   Math.Abs(lion.CoordinateY - antilopeToHunt.CoordinateY) > 1;
-        }
-
-        /// <summary>
-        /// Calculates next move of the lion when he has found the antilope to hunt. 
-        /// </summary>
-        /// <param name="nearestAntilope">Antilope.</param>
-        /// <param name="lion">Lion.</param>
+        /// <param name="nearestPrey">Prey.</param>
         /// <param name="freeCellsToMove">Free cells to move.</param>
-        private void HuntAntilope(Animal nearestAntilope, Lion lion, List<NewAnimalCoordinates> freeCellsToMove)
+        public void HuntPrey(IPrey nearestPrey, List<NewAnimalCoordinates> freeCellsToMove)
         {
-            lion.CoordinateX = freeCellsToMove[CalculateMinDistanceToAntilopeByFreeCells(freeCellsToMove, nearestAntilope)].NewXCoordinate;
-            lion.CoordinateY = freeCellsToMove[CalculateMinDistanceToAntilopeByFreeCells(freeCellsToMove, nearestAntilope)].NewYCoordinate;
+            CoordinateX = freeCellsToMove[Helper.CalculateMinDistanceToPreyByFreeCells(freeCellsToMove, nearestPrey)].NewXCoordinate;
+            CoordinateY = freeCellsToMove[Helper.CalculateMinDistanceToPreyByFreeCells(freeCellsToMove, nearestPrey)].NewYCoordinate;
         }
 
         /// <summary>
-        /// Calculates minimal distance to the antilope by free cells.
+        /// Moves the predator to the prey's position and eat it.
         /// </summary>
-        /// <param name="freeCellsToMove">Free cells to move.</param>
-        /// <param name="antilope">Antilope.</param>
-        /// <returns>Index of minimal distance cell.</returns>
-        private int CalculateMinDistanceToAntilopeByFreeCells(List<NewAnimalCoordinates> freeCellsToMove, Animal antilope)
+        /// <param name="prey">Prey.</param>
+        public void EatPrey(IPrey prey)
         {
-            double distance;
-            int counter = 0;
-            int nearestFreeCellIndex = 0;
-            double minDistance = Double.MaxValue;
+            prey.Health = prey.Health <= 0 ? 0 : prey.Health - 10;
+            Health = Health >= ConstantsRepository.LionHealth ? ConstantsRepository.LionHealth : Health + 10;
 
-            foreach (var cell in freeCellsToMove)
+            if (prey.Health == 0)
             {
-                PointsCoordinates pointsCoordinates = new PointsCoordinates
-                {
-                    FirstXPoint = cell.NewXCoordinate,
-                    SecondXPoint = antilope.CoordinateX,
-                    FirstYPoint = cell.NewYCoordinate,
-                    SecondYPoint = antilope.CoordinateY
-                };
-
-                distance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
-
-                if (minDistance > distance)
-                {
-                    minDistance = distance;
-                    nearestFreeCellIndex = counter;
-                }
-                counter++;
-            }
-
-            return nearestFreeCellIndex;
-        }
-
-        /// <summary>
-        /// Moves the lion to the antilope's position and eat it.
-        /// </summary>
-        /// <param name="antilope">Antilope.</param>
-        /// <param name="lion">Lion.</param>
-        private void EatAntilope(Animal antilope, Lion lion)
-        {
-            antilope.Health = antilope.Health <= 0 ? 0 : antilope.Health - 10;
-            lion.Health = lion.Health >= ConstantsRepository.LionHealth ? ConstantsRepository.LionHealth : lion.Health + 10;
-
-            if (antilope.Health == 0)
-            {
-                lion.CoordinateX = antilope.CoordinateX;
-                lion.CoordinateY = antilope.CoordinateY;
-                antilope.IsDead = true;
-                lion.Health = ConstantsRepository.LionHealth;
+                CoordinateX = prey.CoordinateX;
+                CoordinateY = prey.CoordinateY;
+                prey.IsDead = true;
+                Health = ConstantsRepository.LionHealth;
             }
         }
 
@@ -196,7 +92,7 @@ namespace GameEngine.Entities
         /// <returns>New animal (child).</returns>
         public override Animal? GiveBirth(Board board, List<Animal> animals)
         {
-            NewAnimalCoordinates birthCoordinates = CalculateFreeCellsToBirth(board, animals);
+            NewAnimalCoordinates? birthCoordinates = CalculateFreeCellsToBirth(board, animals);
             Animal? child = null;
 
             if (birthCoordinates != null)
