@@ -31,11 +31,5 @@
         /// <param name="left">Shift from left.</param>
         /// <param name="top">Shift from top.</param>
         void SetCursorPosition(int left, int top);
-
-        /// <summary>
-        /// Sets console window's title.
-        /// </summary>
-        /// <param name="title">Title.</param>
-        void SetTitle(string title);
     }
 }

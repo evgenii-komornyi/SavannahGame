@@ -1,4 +1,5 @@
 ﻿using GameEngine.Services;
+using GameEngine.Services.PairManager;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +24,7 @@ static IHostBuilder CreateHostBuilder(string[] args)
             services.AddSingleton<IUserInterface, UserInterface>();
             services.AddSingleton<IWindow, Window>();
             services.AddSingleton<IAnimalActions, AnimalActions>();
+            services.AddSingleton<IPairManager, PairManager>();
         });
 
     return hostBuilder;

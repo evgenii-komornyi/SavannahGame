@@ -1,4 +1,5 @@
 ﻿using GameEngine.Services;
+using Repository;
 
 namespace GameEngine.Entities
 {
@@ -23,14 +24,25 @@ namespace GameEngine.Entities
         public int CoordinateY { get; set; }
 
         /// <summary>
-        /// Animal type.
+        /// Animal sex.
         /// </summary>
-        public AnimalType Type { get; set; }
+        public AnimalSex Sex { get; set; }
 
+        /// <summary>
+        /// Indicates animal is paired. 
+        /// If true - animal is paired.
+        /// </summary>
+        public bool IsPaired { get; set; }
+        
         /// <summary>
         /// Animal vision.
         /// </summary>
         public int Vision { get; set; }
+
+        /// <summary>
+        /// Animal health.
+        /// </summary>
+        public double Health { get; set; }
 
         /// <summary>
         ///  Indicates animal is dead. 
@@ -49,10 +61,7 @@ namespace GameEngine.Entities
         /// Generates new id.
         /// </summary>
         /// <returns>Incremented id.</returns>
-        protected int GenerateId()
-        {
-            return id++;
-        }
+        protected int GenerateId() => id++;
 
         /// <summary>
         /// Moves current animal on the board.
@@ -61,6 +70,25 @@ namespace GameEngine.Entities
         /// <param name="animal">Animal.</param>
         /// <param name="animals">Animals.</param>
         public abstract void MoveAnimal(Board board, Animal animal, List<Animal> animals);
+
+        /// <summary>
+        /// Gives birth of a new animal.
+        /// </summary>
+        /// <param name="board">Board.</param>
+        /// <param name="animals">Animals.</param>
+        /// <returns>New animal (child).</returns>
+        public abstract Animal? GiveBirth(Board board, List<Animal> animals);
+
+        /// <summary>
+        /// Makes next move of animal.
+        /// </summary>
+        /// <param name="animal">Animal.</param>
+        /// <param name="freeCellsToMove">Free cells to move.</param>
+        protected void MakeNextMove(Animal animal, List<NewAnimalCoordinates> freeCellsToMove)
+        {
+            MoveToNewRandomPosition(animal, freeCellsToMove);
+            Die(animal, DecreaseHealth(animal));
+        }
 
         /// <summary>
         /// Moves animal to a new random position.
@@ -72,6 +100,26 @@ namespace GameEngine.Entities
             NewAnimalCoordinates nextCoordinatesToMove = freeCellsToMove[Helper.random.Next(0, freeCellsToMove.Count)];
             animal.CoordinateX = nextCoordinatesToMove.NewXCoordinate;
             animal.CoordinateY = nextCoordinatesToMove.NewYCoordinate;
+        }
+
+        /// <summary>
+        /// Decreases animal's health.
+        /// </summary>
+        /// <param name="currentAnimal">Current animal.</param>
+        /// <returns>Decreased health.</returns>
+        private double DecreaseHealth(Animal currentAnimal) => currentAnimal.Health -= ConstantsRepository.HealthDecreaser;
+
+        /// <summary>
+        /// Makes the animal dead.
+        /// </summary>
+        /// <param name="currentAnimal">Current animal.</param>
+        /// <param name="currentHealth">Current health.</param>
+        private void Die(Animal currentAnimal, double currentHealth)
+        {
+            if (currentHealth <= 0)
+            {
+                currentAnimal.IsDead = true;
+            }
         }
 
         /// <summary>
@@ -115,48 +163,48 @@ namespace GameEngine.Entities
         }
 
         /// <summary>
+        /// Calculates first free cell for birth child near female animal.
+        /// </summary>
+        /// <param name="board">Board.</param>
+        /// <param name="animals">Animals.</param>
+        /// <returns>New animal coordinates for child.</returns>
+        protected NewAnimalCoordinates? CalculateFreeCellsToBirth(Board board, List<Animal> animals)
+        {
+            NewAnimalCoordinates? newCoordinates = null;
+
+            for (int newXCoordinate = CoordinateX - 1; newXCoordinate <= CoordinateX + 1; newXCoordinate++)
+            {
+                for (int newYCoordinate = CoordinateY - 1; newYCoordinate <= CoordinateY + 1; newYCoordinate++)
+                {
+                    if (!board.IsCellOnBoard(newXCoordinate, newYCoordinate, board.GameBoard) &&
+                        !Helper.IsCellOccupied(newXCoordinate, newYCoordinate, animals))
+                    {
+                        newCoordinates = new NewAnimalCoordinates
+                        {
+                            NewXCoordinate = newXCoordinate,
+                            NewYCoordinate = newYCoordinate
+                        };
+                    
+                        break;
+                    }
+                }
+            }
+            
+            return newCoordinates;
+        }
+
+        /// <summary>
         /// Finds animals around by type.
         /// </summary>
         /// <param name="animalTarget">Animal target.</param>
         /// <param name="allAnimals">All animals.</param>
-        /// <param name="animalType">Animal type.</param>
         /// <returns>Animals around by type.</returns>
-        protected List<Animal> FindAnimalsAroundByType(Animal animalTarget, List<Animal> allAnimals, AnimalType animalType)
+        protected List<T> FindAnimalsAroundByType<T>(Animal animalTarget, List<Animal> allAnimals) where T : Animal
         {
-            IEnumerable<Animal> animalsAround = LookAround(animalTarget, allAnimals);
+            IEnumerable<Animal> animalsAround = Helper.LookAround(animalTarget, allAnimals, animalTarget.Vision);
 
-            return animalsAround.Where(animal => animal.Type == animalType && !animal.IsDead).ToList();
-        }
-
-        /// <summary>
-        /// Looks around board from animal based on it vision.
-        /// </summary>
-        /// <param name="currentAnimal">Current animal.</param>
-        /// <param name="allAnimals">All animals.</param>
-        /// <returns>Enumerable list with nearby animals.</returns>
-        private IEnumerable<Animal> LookAround(Animal currentAnimal, IEnumerable<Animal> allAnimals)
-        {
-            return from animalForSearch in allAnimals
-                   where AnimalsAreInRange(currentAnimal, animalForSearch)
-                   select animalForSearch;
-        }
-
-        /// <summary>
-        /// Returns all animals in the range of vision, excluding itself.
-        /// </summary>
-        /// <param name="currentAnimal">Current animal.</param>
-        /// <param name="animalForSearch">Animal for search.</param>
-        /// <returns>Are the animals in the range of vision, excluding itself.</returns>
-        private bool AnimalsAreInRange(Animal currentAnimal, Animal animalForSearch)
-        {
-            bool isOwnPosition = currentAnimal.CoordinateX == animalForSearch.CoordinateX &&
-                                 currentAnimal.CoordinateY == animalForSearch.CoordinateY;
-            return !isOwnPosition &&
-                    animalForSearch.CoordinateX >= currentAnimal.CoordinateX - currentAnimal.Vision &&
-                    animalForSearch.CoordinateX <= currentAnimal.CoordinateX + currentAnimal.Vision &&
-                    animalForSearch.CoordinateY >= currentAnimal.CoordinateY - currentAnimal.Vision &&
-                    animalForSearch.CoordinateY <= currentAnimal.CoordinateY + currentAnimal.Vision;
-        }
+            return animalsAround.Where(animal => typeof(T).IsAssignableTo(animal.GetType()) && !animal.IsDead).Select(animal => (T)animal).ToList();
+        }      
 
         /// <summary>
         /// Calculates square distance by Pythagorian theorem.

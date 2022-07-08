@@ -19,7 +19,7 @@ namespace GameEngine.Services
             List<NewAnimalCoordinates> freeCells = CalculateFreeCellsToAddAnimal(animals, board);
             if (board.GameBoard.Length > board.GameBoard.Length * ConstantsRepository.HalfOfBoard)
             {
-                AddAnimalToList(newAnimal, freeCells, animals);
+                GenerateAnimalCoordinates(newAnimal, freeCells, animals);
             }
             else
             {
@@ -28,18 +28,38 @@ namespace GameEngine.Services
         }
 
         /// <summary>
-        /// Adds animal to list with the new coordinates.
+        /// Generates the new animal's coordinates.
         /// </summary>
         /// <param name="newAnimal">New animal.</param>
         /// <param name="freeCells">Free cells.</param>
         /// <param name="animals">Animals.</param>
-        private void AddAnimalToList(Animal newAnimal, List<NewAnimalCoordinates> freeCells, List<Animal> animals)
+        private void GenerateAnimalCoordinates(Animal newAnimal, List<NewAnimalCoordinates> freeCells, List<Animal> animals)
         {
             NewAnimalCoordinates freeCoordinates = freeCells[Helper.random.Next(0, freeCells.Count)];
             newAnimal.CoordinateX = freeCoordinates.NewXCoordinate;
             newAnimal.CoordinateY = freeCoordinates.NewYCoordinate;
+            AddAnimalToList(animals, newAnimal);
+        }
+
+        /// <summary>
+        /// Adds new animal to list.
+        /// </summary>
+        /// <param name="animals">Animals.</param>
+        /// <param name="newAnimal">New animal.</param>
+        private void AddAnimalToList(List<Animal> animals, Animal newAnimal)
+        {
             animals.Add(newAnimal);
         }
+
+        /// <summary>
+        /// Adds borned childs to common animals' list.
+        /// </summary>
+        /// <param name="animals">Animals.</param>
+        /// <param name="children">Children.</param>
+        public void AddChildren(List<Animal> animals, List<Animal> children)
+        {
+            animals.AddRange(children);
+        } 
 
         /// <summary>
         /// Calculates the free cells on board to add a new animal. 
@@ -79,12 +99,12 @@ namespace GameEngine.Services
         public void Move(Board board, List<Animal> animals)
         {
             foreach (Animal animal in animals)
-            { 
+            {
                 if (!IsAnimalDead(animal))
                 {
                     animal.MoveAnimal(board, animal, animals);
                 }
-            }
+            }  
         }
 
         /// <summary>
@@ -114,7 +134,7 @@ namespace GameEngine.Services
         /// </summary>
         /// <param name="animal">Animal.</param>
         /// <returns>Is animal dead.</returns>
-        public bool IsAnimalDead(Animal animal)
+        private bool IsAnimalDead(Animal animal)
         {
             return animal.IsDead;
         }

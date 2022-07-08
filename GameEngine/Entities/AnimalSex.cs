@@ -1,10 +1,10 @@
 ﻿namespace GameEngine.Entities
 {
     /// <summary>
-    /// Animals' type.
+    /// Animal's sex.
     /// </summary>
-    public enum AnimalType
+    public enum AnimalSex
     {
-        Antilope, Lion
+        Female, Male
     }
 }

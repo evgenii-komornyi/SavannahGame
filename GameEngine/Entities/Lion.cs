@@ -1,4 +1,5 @@
-﻿using Repository;
+﻿using GameEngine.Services;
+using Repository;
 
 namespace GameEngine.Entities
 {
@@ -13,8 +14,10 @@ namespace GameEngine.Entities
         public Lion()
         {
             Id = GenerateId();
-            Type = AnimalType.Lion;
+            Sex = (AnimalSex)Helper.random.Next(2);
+            IsPaired = false;
             Vision = ConstantsRepository.LionVision;
+            Health = ConstantsRepository.LionHealth;
             IsDead = false;
             Letter = ConstantsRepository.LionLetter;
         }
@@ -29,7 +32,7 @@ namespace GameEngine.Entities
         {
             Lion lion = (Lion)animal;
 
-            List<Animal> antilopesAround = FindAnimalsAroundByType(lion, animals, AnimalType.Antilope);
+            List<Antilope> antilopesAround = FindAnimalsAroundByType<Antilope>(lion, animals);
 
             Animal? antilopeToHunt = FindNearestAntilope(antilopesAround, lion);
 
@@ -37,7 +40,7 @@ namespace GameEngine.Entities
 
             if (antilopeToHunt == null)
             {
-                MoveToNewRandomPosition(lion, freeCellsToMove);
+                MakeNextMove(lion, freeCellsToMove);
             }
             else
             {
@@ -58,7 +61,7 @@ namespace GameEngine.Entities
         /// <param name="antilopesAround">Antilopes around.</param>
         /// <param name="lion">Lion.</param>
         /// <returns>Nearest antilope to hunt.</returns>
-        private Animal? FindNearestAntilope(List<Animal> antilopesAround, Lion lion)
+        private Animal? FindNearestAntilope(List<Antilope> antilopesAround, Lion lion)
         {
             Animal? nearestAntilope = null;
 
@@ -76,7 +79,7 @@ namespace GameEngine.Entities
         /// <param name="antilopesAround">Antilopes are around.</param>
         /// <param name="lion">Lion.</param>
         /// <returns>Nearest antilope to lion.</returns>
-        private Animal? CalculateMinDistanceToAntilope(List<Animal> antilopesAround, Animal lion)
+        private Animal? CalculateMinDistanceToAntilope(List<Antilope> antilopesAround, Animal lion)
         {
             double distance;
             int counter = 0;
@@ -85,11 +88,13 @@ namespace GameEngine.Entities
 
             foreach (var antilope in antilopesAround)
             {
-                PointsCoordinates pointsCoordinates = new PointsCoordinates();
-                pointsCoordinates.FirstXPoint = lion.CoordinateX;
-                pointsCoordinates.SecondXPoint = antilope.CoordinateX;
-                pointsCoordinates.FirstYPoint = lion.CoordinateY;
-                pointsCoordinates.SecondYPoint = antilope.CoordinateY;
+                PointsCoordinates pointsCoordinates = new PointsCoordinates
+                {
+                    FirstXPoint = lion.CoordinateX,
+                    SecondXPoint = antilope.CoordinateX,
+                    FirstYPoint = lion.CoordinateY,
+                    SecondYPoint = antilope.CoordinateY
+                };
 
                 distance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
 
@@ -143,11 +148,13 @@ namespace GameEngine.Entities
 
             foreach (var cell in freeCellsToMove)
             {
-                PointsCoordinates pointsCoordinates = new PointsCoordinates();
-                pointsCoordinates.FirstXPoint = cell.NewXCoordinate;
-                pointsCoordinates.SecondXPoint = antilope.CoordinateX;
-                pointsCoordinates.FirstYPoint = cell.NewYCoordinate;
-                pointsCoordinates.SecondYPoint = antilope.CoordinateY;
+                PointsCoordinates pointsCoordinates = new PointsCoordinates
+                {
+                    FirstXPoint = cell.NewXCoordinate,
+                    SecondXPoint = antilope.CoordinateX,
+                    FirstYPoint = cell.NewYCoordinate,
+                    SecondYPoint = antilope.CoordinateY
+                };
 
                 distance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
 
@@ -169,9 +176,39 @@ namespace GameEngine.Entities
         /// <param name="lion">Lion.</param>
         private void EatAntilope(Animal antilope, Lion lion)
         {
-            lion.CoordinateX = antilope.CoordinateX;
-            lion.CoordinateY = antilope.CoordinateY;
-            antilope.IsDead = true;
+            antilope.Health = antilope.Health <= 0 ? 0 : antilope.Health - 10;
+            lion.Health = lion.Health >= ConstantsRepository.LionHealth ? ConstantsRepository.LionHealth : lion.Health + 10;
+
+            if (antilope.Health == 0)
+            {
+                lion.CoordinateX = antilope.CoordinateX;
+                lion.CoordinateY = antilope.CoordinateY;
+                antilope.IsDead = true;
+                lion.Health = ConstantsRepository.LionHealth;
+            }
+        }
+
+        /// <summary>
+        /// Gives birth of a new animal.
+        /// </summary>
+        /// <param name="board">Board.</param>
+        /// <param name="animals">Animals.</param>
+        /// <returns>New animal (child).</returns>
+        public override Animal? GiveBirth(Board board, List<Animal> animals)
+        {
+            NewAnimalCoordinates birthCoordinates = CalculateFreeCellsToBirth(board, animals);
+            Animal? child = null;
+
+            if (birthCoordinates != null)
+            {
+                child = new Lion
+                {
+                    CoordinateX = birthCoordinates.NewXCoordinate,
+                    CoordinateY = birthCoordinates.NewYCoordinate
+                };
+            }
+            
+            return child;
         }
     }
 }
