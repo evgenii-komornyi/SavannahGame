@@ -1,11 +1,12 @@
 ﻿using GameEngine.Entities;
-using GameEngine.Entities.Interfaces;
+using GameEngine.Helpers;
+using GameEngine.Interfaces;
 using Repository;
 
-namespace GameEngine.Services.PairManager
+namespace GameEngine.Services.Managers
 {
     /// <summary>
-    /// The class contains logic to manage aniimals' pairs.
+    /// The class contains logic to manage animals' pairs.
     /// </summary>
     public class PairManager : IPairManager
     {
@@ -15,22 +16,22 @@ namespace GameEngine.Services.PairManager
         public Pair? Pair { get; private set; }
 
         /// <summary>
-        /// Creates new pair for current animal, searching opposite free animal near by this animal. 
+        /// Creates new pair for current pairable object, searching opposite free pairable object near by this object. 
         /// </summary>
-        /// <param name="animals">Animals.</param>
-        public void CreatePair(List<Animal> animals)
+        /// <param name="pairables">Pairables.</param>
+        public void CreatePair(List<IItem> pairables)
         {
-            foreach (var currentAnimal in animals)
+            foreach (var currentAnimal in pairables.Cast<Animal>())
             {
                 if (!currentAnimal.IsPaired)
                 {
-                    List<IAnimal> animalsAround = Helper.LookAround(currentAnimal, animals).ToList();
+                    List<Animal> animalsAround = Helper.LookAround(currentAnimal, pairables).Cast<Animal>().ToList();
 
-                    List<IAnimal> freeOppositeSexAnimalsAround = animalsAround
+                    List<Animal> freeOppositeSexAnimalsAround = animalsAround
                         .Where(animal => !animal.Sex.Equals(currentAnimal.Sex) && !animal.IsPaired && animal.GetType() == currentAnimal.GetType())
                         .ToList();
 
-                    IAnimal? animalToPair = freeOppositeSexAnimalsAround.FirstOrDefault();
+                    Animal? animalToPair = freeOppositeSexAnimalsAround.FirstOrDefault();
 
                     if (animalToPair == null)
                     {
@@ -52,15 +53,15 @@ namespace GameEngine.Services.PairManager
         }
 
         /// <summary>
-        /// Checks pair for existance, and if it is true, then animal can give birth new animal after 3 consecutive rounds. 
+        /// Checks pair for existance, and if it is true, then object can reproduce new object after 3 consecutive rounds. 
         /// </summary>
-        /// <param name="pairs">Pairs.</param>
+        /// <param name="pairsToDestroy">Pairs to destroy.</param>
         /// <param name="board">Board.</param>
-        /// <param name="animals">Animals.</param>
-        /// <param name="children">Childs.</param>
-        public void CheckPairForExistence(List<Pair> pairs, Board board, List<Animal> animals, List<Animal> children)
+        /// <param name="gameObjects">Game objects.</param>
+        /// <param name="reproducedObjects">Reproduced objects.</param>
+        public void CheckPairForExistence(List<Pair> pairsToDestroy, Board board, List<IItem> gameObjects, List<IItem> reproducedObjects)
         {
-            foreach (var pair in pairs)
+            foreach (var pair in pairsToDestroy)
             {
                 if (pair != null)
                 {
@@ -76,8 +77,11 @@ namespace GameEngine.Services.PairManager
 
                         if (pair.RelationshipDuration == ConstantsRepository.RelationshipDuration)
                         {
-                            Animal child = pair.GiveBirth(board, animals, pairs);
-                            children.Add(child);
+                            IItem? newItem = pair.Reproduce(board, gameObjects, pairsToDestroy);
+                            if (newItem != null)
+                            {
+                                reproducedObjects.Add(newItem);
+                            }
                             pair.RelationshipDuration = 0;
                         }
                     }
@@ -91,7 +95,7 @@ namespace GameEngine.Services.PairManager
         /// <param name="currentAnimal">Current animal.</param>
         /// <param name="pairAnimal">Animal in pair.</param>
         /// <returns>True if animal is still nearby.</returns>
-        private bool IsAnimalStillNear(IAnimal currentAnimal, IAnimal pairAnimal)
+        private bool IsAnimalStillNear(Animal currentAnimal, Animal pairAnimal)
         {
             return Math.Abs(currentAnimal.CoordinateX - pairAnimal.CoordinateX) <= 1 &&
                    Math.Abs(currentAnimal.CoordinateY - pairAnimal.CoordinateY) <= 1;

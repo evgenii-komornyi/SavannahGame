@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AnimalsTypes\AnimalsTypes.csproj" />
     <ProjectReference Include="..\ConstantsRepository\ConstantsRepository.csproj" />
     <ProjectReference Include="..\GameEngine\GameEngine.csproj" />
   </ItemGroup>

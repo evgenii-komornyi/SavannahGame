@@ -26,15 +26,15 @@ namespace UI
         public string? GetResponseFromMenu() => Console.ReadLine();
         
 
-        /// <summary>
+        /*/// <summary>
         /// Shows buttons and corresponding commands.
         /// </summary>
         public void ShowMenuButtons()
         {
             ShowMessage(ConstantsRepository.AddAntilopeDescription);
             ShowMessage(ConstantsRepository.AddLionDescription);
-            ShowMessage(ConstantsRepository.ExitButtonDescription);
-        }
+           
+        }*/
 
         /// <summary>
         /// Shows message to user.

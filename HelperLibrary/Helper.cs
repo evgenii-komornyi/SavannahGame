@@ -1,7 +1,7 @@
-﻿using GameEngine.Entities;
-using GameEngine.Entities.Interfaces;
+﻿using AdditionalLibrary;
+using AnimalsBehaviour;
 
-namespace GameEngine.Services
+namespace HelperLibrary
 {
     /// <summary>
     /// The class contains common methods.
@@ -29,7 +29,7 @@ namespace GameEngine.Services
         /// <param name="allAnimals">All animals.</param>
         /// <param name="vision">How many cells animal can sense other animals.</param>
         /// <returns>Enumerable list with nearby animals.</returns>
-        public static IEnumerable<IAnimal> LookAround(Animal currentAnimal, IEnumerable<Animal> allAnimals, int vision = 1)
+        public static IEnumerable<Animal> LookAround(Animal currentAnimal, IEnumerable<Animal> allAnimals, int vision = 1)
         {
             return from animalForSearch in allAnimals
                    where AnimalsAreInRange(currentAnimal, animalForSearch, vision)
@@ -41,10 +41,9 @@ namespace GameEngine.Services
         /// </summary>
         /// <param name="animalsAround">Animals around.</param>
         /// <returns>Animals around by type.</returns>
-        public static List<T> FindAnimalsAroundByType<T>(List<IAnimal> animalsAround) where T : IAnimal
+        public static List<T> FindAnimalsAroundByType<T>(List<Animal> animalsAround) where T : Animal
         {
-            List<T> result = animalsAround.Where(animal => typeof(T).IsAssignableFrom(animal.GetType()) && !animal.IsDead).Select(animal => (T)animal).ToList();
-            return result;
+            return animalsAround.Where(animal => typeof(T).IsAssignableFrom(animal.GetType()) && !animal.IsDead).Select(animal => (T)animal).ToList();
         }
 
         
@@ -64,8 +63,9 @@ namespace GameEngine.Services
         /// Finds the nearest prey to predator's position.
         /// </summary>
         /// <param name="preysAround">Preys around.</param>
+        /// <param name="predator">Predator.</param>
         /// <returns>Nearest prey to hunt.</returns>
-        public static IPrey? FindNearestPrey(List<IPrey> preysAround, IPredator predator)
+        public static IPrey? FindNearestPrey(List<IPrey> preysAround, Predator predator)
         {
             IPrey? nearestPrey = null;
 
@@ -119,7 +119,7 @@ namespace GameEngine.Services
         /// <param name="preysAround">Preys are around.</param>
         /// <param name="predator">Predator.</param>
         /// <returns>Nearest prey to predator.</returns>
-        private static IPrey? CalculateMinDistanceToPrey(List<IPrey> preysAround, IPredator predator)
+        private static IPrey? CalculateMinDistanceToPrey(List<IPrey> preysAround, Predator predator)
         {
             double distance;
             int counter = 0;
@@ -155,7 +155,7 @@ namespace GameEngine.Services
         /// <param name="preyToHunt">Far prey to hunt.</param>
         /// <param name="predator">Predator.</param>
         /// <returns>Is prey far.</returns>
-        public static bool IsPreyFar(IPrey preyToHunt, IPredator predator)
+        public static bool IsPreyFar(IPrey preyToHunt, Predator predator)
         {
             return Math.Abs(predator.CoordinateX - preyToHunt.CoordinateX) > 1 ||
                    Math.Abs(predator.CoordinateY - preyToHunt.CoordinateY) > 1;
@@ -212,9 +212,9 @@ namespace GameEngine.Services
         /// <param name="predatorsAround">Predators around.</param>
         /// <param name="prey">Prey.</param>
         /// <returns>Nearest predator.</returns>
-        public static IPredator? FindNearestPredator(List<IPredator> predatorsAround, IPrey prey)
+        public static Predator? FindNearestPredator(List<Predator> predatorsAround, IPrey prey)
         {
-            IPredator? nearestPredator = null;
+            Predator? nearestPredator = null;
 
             if (predatorsAround.Count != 0)
             {
@@ -230,7 +230,7 @@ namespace GameEngine.Services
         /// <param name="predatorsAround">Predators around.</param>
         /// <param name="prey">Prey.</param>
         /// <returns>Nearest predator to the prey.</returns>
-        private static IPredator? CalculateMinDistanceToPredator(List<IPredator> predatorsAround, IPrey prey)
+        private static Predator? CalculateMinDistanceToPredator(List<Predator> predatorsAround, IPrey prey)
         {
             double nearestPredatorDistance;
             int counter = 0;
@@ -266,7 +266,7 @@ namespace GameEngine.Services
         /// <param name="nearestPredator">Nearest predator.</param>
         /// <param name="prey">Prey.</param>
         /// <returns>Is predator near.</returns>
-        public static bool IsPredatorNear(IPredator nearestPredator, Animal prey)
+        public static bool IsPredatorNear(Predator nearestPredator, Animal prey)
         {
             return Math.Abs(prey.CoordinateX - nearestPredator.CoordinateX) < 2 ||
                    Math.Abs(prey.CoordinateY - nearestPredator.CoordinateY) < 2;
@@ -278,7 +278,7 @@ namespace GameEngine.Services
         /// <param name="freeCellsToMove">Free cells to move.</param>
         /// <param name="predator">Predator.</param>
         /// <returns>Index of maximal distance cell.</returns>
-        public static int CalculateMaxDistanceFromPredatorByFreeCells(List<NewAnimalCoordinates> freeCellsToMove, IPredator predator)
+        public static int CalculateMaxDistanceFromPredatorByFreeCells(List<NewAnimalCoordinates> freeCellsToMove, Predator predator)
         {
             double distance;
             int counter = 0;
@@ -306,6 +306,16 @@ namespace GameEngine.Services
             }
 
             return farthestFreeCellIndex;
+        }
+
+        /// <summary>
+        /// Checks dead animal.  
+        /// </summary>
+        /// <param name="animal">Animal.</param>
+        /// <returns>Is animal dead.</returns>
+        public static bool IsAnimalDead(Animal animal)
+        {
+            return animal.IsDead;
         }
     }
 }

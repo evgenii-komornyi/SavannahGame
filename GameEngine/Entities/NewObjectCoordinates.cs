@@ -3,7 +3,7 @@
     /// <summary>
     /// The class contains new animal coordinates.
     /// </summary>
-    public class NewAnimalCoordinates
+    public class NewObjectCoordinates
     {
         /// <summary>
         /// New X coordinate.

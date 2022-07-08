@@ -1,17 +1,17 @@
-﻿using GameEngine.Entities;
+﻿using GameEngine.Interfaces;
 using Repository;
 
 namespace GameEngine
 {
     /// <summary>
-    /// The class contains all logic of the game engine.
+    /// The class contains all logic of the game board.
     /// </summary>
     public class Board
     {
         public string[,] GameBoard;
 
         /// <summary>
-        /// The class contains all logic of the game engine.
+        /// The class contains all logic of the game board.
         /// </summary>
         public Board()
         {
@@ -20,26 +20,26 @@ namespace GameEngine
         }
 
         /// <summary>
-        /// Fills the board with animals
+        /// Fills the board with the game objects
         /// </summary>
-        /// <param name="animals">Animals to fill the board.</param>
-        public void FillBoardWithAnimals(List<Animal> animals)
+        /// <param name="gameObjects">Game objects.</param>
+        public void FillBoardWithObjects(List<IItem> gameObjects)
         {
-            foreach (var animal in animals)
+            foreach (var gameObject in gameObjects)
             {
-                PutAnimalOnBoard(animal, animal.Letter);
+                PutAnimalOnBoard(gameObject, gameObject.Letter.ToString());
             }
         }
 
         /// <summary>
-        /// Removes animal from board.
+        /// Removes game objects from board.
         /// </summary>
-        /// <param name="animals">Animals.</param>
-        public void RemoveAnimalFromBoard(List<Animal> animals)
+        /// <param name="gameObjects">Game objects.</param>
+        public void RemoveItemFromBoard(List<IItem> gameObjects)
         {
-            foreach (Animal animal in animals)
+            foreach (var gameObject in gameObjects)
             {
-                GameBoard[animal.CoordinateX, animal.CoordinateY] = ConstantsRepository.EmptyCell;
+                GameBoard[gameObject.CoordinateX, gameObject.CoordinateY] = ConstantsRepository.EmptyCell;
             }
         }
 
@@ -59,13 +59,13 @@ namespace GameEngine
         }
 
         /// <summary>
-        /// Fills the board with the first animals' letter. 
+        /// Fills the board with the object key. 
         /// </summary>
-        /// <param name="animal">Animal.</param>
-        /// <param name="animalLetter">Animal letter.</param>
-        private void PutAnimalOnBoard(Animal animal, string animalLetter)
+        /// <param name="gameObject">Game object.</param>
+        /// <param name="objectKey">Object key.</param>
+        private void PutAnimalOnBoard(IItem gameObject, string objectKey)
         {
-            GameBoard[animal.CoordinateX, animal.CoordinateY] = animalLetter;
+            GameBoard[gameObject.CoordinateX, gameObject.CoordinateY] = objectKey;
         }
 
         /// <summary>
