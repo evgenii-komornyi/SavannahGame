@@ -32,7 +32,7 @@ namespace GameEngine.Entities
             {
                 if (Helper.IsHunterNear(carnivore, this))
                 {
-                    RunAway(carnivore, this, freeCells);
+                    RunAway(carnivore, freeCells);
                 }
             }
         }
@@ -41,9 +41,8 @@ namespace GameEngine.Entities
         /// Runs away herbivore from nearest hunter.
         /// </summary>
         /// <param name="nearestHunter">Nearest hunter.</param>
-        /// <param name="herbivore">Herbivore.</param>
         /// <param name="freeCells">Free cells.</param>
-        protected virtual void RunAway(Carnivore nearestHunter, Herbivore herbivore, List<NewObjectCoordinates> freeCells)
+        protected virtual void RunAway(Carnivore nearestHunter, List<NewObjectCoordinates> freeCells)
         {
             Relocate(freeCells[Helper.CalculateMaxDistanceFromCarnivoreByFreeCells(freeCells, nearestHunter)].NewXCoordinate,
                 freeCells[Helper.CalculateMaxDistanceFromCarnivoreByFreeCells(freeCells, nearestHunter)].NewYCoordinate);

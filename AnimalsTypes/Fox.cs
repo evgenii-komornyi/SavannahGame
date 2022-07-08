@@ -4,6 +4,9 @@ using Repository;
 
 namespace AnimalsTypes
 {
+    /// <summary>
+    /// Fox entity.
+    /// </summary>
     public class Fox : Carnivore
     {
         /// <summary>
@@ -17,6 +20,7 @@ namespace AnimalsTypes
             Vision = ConstantsRepository.FoxVision;
             Health = ConstantsRepository.MaxHealth;
             IsActive = true;
+            IsVisible = true;
             Letter = ConsoleKey.F;
             Specie = "Fox";
         }

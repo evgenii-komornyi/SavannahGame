@@ -1,4 +1,3 @@
-using AnimalsTypes;
 using GameEngine;
 using GameEngine.Entities;
 using GameEngine.Interfaces;

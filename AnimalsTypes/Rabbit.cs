@@ -4,6 +4,9 @@ using Repository;
 
 namespace AnimalsTypes
 {
+    /// <summary>
+    /// Rabbit entity.
+    /// </summary>
     public class Rabbit : Herbivore
     {
         /// <summary>
