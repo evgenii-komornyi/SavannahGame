@@ -75,6 +75,7 @@ namespace UI
             Console.BackgroundColor = ConsoleColor.White;
             _window.SetFontColor(ConsoleColor.Black);
             _userInterface.ShowMessage(ConstantsRepository.ExitButtonDescription);
+            _window.ResetFontColor();
             RunGame();
         }
 
