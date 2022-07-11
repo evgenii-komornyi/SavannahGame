@@ -13,11 +13,6 @@ namespace UI
         /// <returns>User prompt.</returns>
         string? GetResponseFromMenu();
 
-/*        /// <summary>
-        /// Shows buttons and corresponding commands.
-        /// </summary>
-        void ShowMenuButtons();*/
-
         /// <summary>
         /// Shows message to user.
         /// </summary>
