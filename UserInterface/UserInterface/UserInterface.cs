@@ -24,17 +24,6 @@ namespace UI
         /// </summary>
         /// <returns>User prompt.</returns>
         public string? GetResponseFromMenu() => Console.ReadLine();
-        
-
-        /*/// <summary>
-        /// Shows buttons and corresponding commands.
-        /// </summary>
-        public void ShowMenuButtons()
-        {
-            ShowMessage(ConstantsRepository.AddAntilopeDescription);
-            ShowMessage(ConstantsRepository.AddLionDescription);
-           
-        }*/
 
         /// <summary>
         /// Shows message to user.
