@@ -27,7 +27,7 @@ namespace GameEngine
         {
             foreach (var gameObject in gameObjects)
             {
-                PutAnimalOnBoard(gameObject, gameObject.Letter.ToString());
+                PutObjectOnBoard(gameObject, gameObject.Letter.ToString());
             }
         }
 
@@ -35,7 +35,7 @@ namespace GameEngine
         /// Removes game objects from board.
         /// </summary>
         /// <param name="gameObjects">Game objects.</param>
-        public void RemoveItemFromBoard(List<IItem> gameObjects)
+        public void RemoveGameObjectFromBoard(List<IItem> gameObjects)
         {
             foreach (var gameObject in gameObjects)
             {
@@ -63,7 +63,7 @@ namespace GameEngine
         /// </summary>
         /// <param name="gameObject">Game object.</param>
         /// <param name="objectKey">Object key.</param>
-        private void PutAnimalOnBoard(IItem gameObject, string objectKey)
+        private void PutObjectOnBoard(IItem gameObject, string objectKey)
         {
             GameBoard[gameObject.CoordinateX, gameObject.CoordinateY] = objectKey;
         }
