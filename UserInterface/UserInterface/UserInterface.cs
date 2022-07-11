@@ -120,7 +120,9 @@ namespace UI
 
                 for (int currentColumn = 0; currentColumn < board.GameBoard.GetLength(0); currentColumn++)
                 {
-                    ShowMessage(board.GameBoard[currentColumn, currentRow], false);
+                    _window.SetFontColor(board.GameBoard[currentColumn, currentRow].Color);
+                    ShowMessage(board.GameBoard[currentColumn, currentRow].Letter, false);
+                    _window.ResetFontColor();
                     _window.SetCursorPosition(ConstantsRepository.OffsetX + currentColumn, currentRow + ConstantsRepository.OffsetY);
                 }
             }

@@ -38,6 +38,11 @@ namespace GameEngine.Entities
         public ConsoleKey Letter { get; set; }
 
         /// <summary>
+        /// Symbol's color.
+        /// </summary>
+        public ConsoleColor Color { get; set; }
+
+        /// <summary>
         /// Item's specie.
         /// </summary>
         public string Specie { get; set; }

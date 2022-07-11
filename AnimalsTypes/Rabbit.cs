@@ -22,6 +22,7 @@ namespace AnimalsTypes
             IsActive = true;
             IsVisible = true;
             Letter = ConsoleKey.R;
+            Color = ConsoleColor.White;
             Specie = "Rabbit";
         }
     }

@@ -22,6 +22,7 @@ namespace AnimalsTypes
             IsActive = true;
             IsVisible = true;
             Letter = ConsoleKey.A;
+            Color = ConsoleColor.Yellow;
             Specie = "Antilope";
         }
     }

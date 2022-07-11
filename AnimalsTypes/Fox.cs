@@ -22,6 +22,7 @@ namespace AnimalsTypes
             IsActive = true;
             IsVisible = true;
             Letter = ConsoleKey.F;
+            Color = ConsoleColor.DarkYellow;
             Specie = "Fox";
         }
     }

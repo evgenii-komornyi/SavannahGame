@@ -1,4 +1,5 @@
-﻿using GameEngine.Interfaces;
+﻿using GameEngine.Entities;
+using GameEngine.Interfaces;
 using Repository;
 
 namespace GameEngine
@@ -8,14 +9,14 @@ namespace GameEngine
     /// </summary>
     public class Board
     {
-        public string[,] GameBoard;
+        public BoardItem[,] GameBoard;
 
         /// <summary>
         /// The class contains all logic of the game board.
         /// </summary>
         public Board()
         {
-            GameBoard = new string[ConstantsRepository.ColumnsCount, ConstantsRepository.RowsCount];
+            GameBoard = new BoardItem[ConstantsRepository.ColumnsCount, ConstantsRepository.RowsCount];
             ClearBoard();
         }
 
@@ -27,7 +28,7 @@ namespace GameEngine
         {
             foreach (var gameObject in gameObjects)
             {
-                PutObjectOnBoard(gameObject, gameObject.Letter.ToString());
+                PutObjectOnBoard(gameObject);
             }
         }
 
@@ -37,9 +38,15 @@ namespace GameEngine
         /// <param name="gameObjects">Game objects.</param>
         public void RemoveGameObjectFromBoard(List<IItem> gameObjects)
         {
+            BoardItem boardItem = new BoardItem
+            {
+                Letter = ConstantsRepository.EmptyCell,
+                Color = ConsoleColor.Gray
+            };
+
             foreach (var gameObject in gameObjects)
             {
-                GameBoard[gameObject.CoordinateX, gameObject.CoordinateY] = ConstantsRepository.EmptyCell;
+                GameBoard[gameObject.CoordinateX, gameObject.CoordinateY] = boardItem;
             }
         }
 
@@ -50,7 +57,7 @@ namespace GameEngine
         /// <param name="newYCoordinate">New Y coordinate.</param>
         /// <param name="currentBoard">Current board.</param>
         /// <returns>Is cell on board.</returns>
-        public bool IsCellOnBoard(int newXCoordinate, int newYCoordinate, string[,] currentBoard)
+        public bool IsCellOnBoard(int newXCoordinate, int newYCoordinate, BoardItem[,] currentBoard)
         {
             return (newXCoordinate < 0) ||
                    (newXCoordinate >= currentBoard.GetLength(0)) ||
@@ -63,9 +70,15 @@ namespace GameEngine
         /// </summary>
         /// <param name="gameObject">Game object.</param>
         /// <param name="objectKey">Object key.</param>
-        private void PutObjectOnBoard(IItem gameObject, string objectKey)
+        private void PutObjectOnBoard(IItem gameObject)
         {
-            GameBoard[gameObject.CoordinateX, gameObject.CoordinateY] = objectKey;
+            BoardItem boardItem = new BoardItem
+            {
+                Letter = gameObject.Letter.ToString(),
+                Color = gameObject.Color
+            };
+
+            GameBoard[gameObject.CoordinateX, gameObject.CoordinateY] = boardItem;
         }
 
         /// <summary>
@@ -73,11 +86,17 @@ namespace GameEngine
         /// </summary>
         private void ClearBoard()
         {
+            BoardItem boardItem = new BoardItem
+            {
+                Letter = ConstantsRepository.EmptyCell,
+                Color = ConsoleColor.Gray
+            };
+
             for (int currentColumn = 0; currentColumn < GameBoard.GetLength(0); currentColumn++)
             {
                 for (int currentRow = 0; currentRow < GameBoard.GetLength(1); currentRow++)
                 {     
-                    GameBoard[currentColumn, currentRow] = ConstantsRepository.EmptyCell;
+                    GameBoard[currentColumn, currentRow] = boardItem;
                 }
             }
         }

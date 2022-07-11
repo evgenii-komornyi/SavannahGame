@@ -11,6 +11,11 @@
         public string Specie { get; set; }
 
         /// <summary>
+        /// Symbol's color.
+        /// </summary>
+        public ConsoleColor Color { get; set; }
+
+        /// <summary>
         /// Item's type.
         /// </summary>
         public Type Type { get; set; }

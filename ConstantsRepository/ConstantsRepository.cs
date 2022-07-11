@@ -36,7 +36,7 @@
         public const string LeftRightWall = "║";
         public const int OffsetX = 3;
         public const int OffsetY = 1;
-        public const string EmptyCell = ".";
+        public const string EmptyCell = " ";
         public const double HalfOfBoard = 0.5;
         #endregion
 

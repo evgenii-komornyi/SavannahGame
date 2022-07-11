@@ -36,6 +36,11 @@
         ConsoleKey Letter { get; set; }
 
         /// <summary>
+        /// Symbol's color.
+        /// </summary>
+        ConsoleColor Color { get; set; }
+
+        /// <summary>
         /// Item's specie.
         /// </summary>
         string Specie { get; set; }

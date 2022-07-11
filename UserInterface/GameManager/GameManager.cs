@@ -67,8 +67,13 @@ namespace UI
 
             foreach (var info in _gameObjectsInfo)
             {
+                _window.SetFontColor(info.Value.Color);
                 _userInterface.ShowMessage($"Press {info.Key} - to add {info.Value.Specie};");
+                _window.ResetFontColor();
             }
+
+            Console.BackgroundColor = ConsoleColor.White;
+            _window.SetFontColor(ConsoleColor.Black);
             _userInterface.ShowMessage(ConstantsRepository.ExitButtonDescription);
             RunGame();
         }
@@ -133,6 +138,7 @@ namespace UI
                 GameObjectsInfo info = new GameObjectsInfo
                 {
                     Specie = plugin.Specie,
+                    Color = plugin.Color,
                     Type = plugin.GetType()
                 };
                 _gameObjectsInfo.Add(plugin.Letter, info);                
