@@ -33,10 +33,10 @@ namespace GameEngine
         }
 
         /// <summary>
-        /// Removes game objects from board.
+        /// Prepares clean board for new iteration.
         /// </summary>
         /// <param name="gameObjects">Game objects.</param>
-        public void RemoveGameObjectFromBoard(List<IItem> gameObjects)
+        public void PrepareBoard(List<IItem> gameObjects)
         {
             BoardItem boardItem = new BoardItem
             {

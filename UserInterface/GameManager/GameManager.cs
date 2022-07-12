@@ -93,7 +93,7 @@ namespace UI
                 _board.FillBoardWithObjects(_gameObjects);
 
                 _userInterface.DrawBoard(_board);
-                _board.RemoveGameObjectFromBoard(_gameObjects);
+                _board.PrepareBoard(_gameObjects);
                 
                 _movementManager.Act(_gameObjects, _board);
 
