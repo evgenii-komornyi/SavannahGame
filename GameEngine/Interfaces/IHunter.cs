@@ -12,7 +12,7 @@ namespace GameEngine.Interfaces
         /// </summary>
         /// <param name="nearestAnimal">Nearest animal.</param>
         /// <param name="freeCells">Free cells.</param>
-        void Hunt(Animal nearestAnimal, List<NewObjectCoordinates> freeCells);
+        void Hunt(Animal nearestAnimal, List<NewItemCoordinates> freeCells);
 
         /// <summary>
         /// Relocates hunter to the cell of the animal, that was killed.

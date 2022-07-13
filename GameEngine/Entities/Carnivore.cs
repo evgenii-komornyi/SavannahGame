@@ -10,17 +10,17 @@ namespace GameEngine.Entities
     public abstract class Carnivore : Animal, IHunter
     {
         /// <summary>
-        /// Moves movable object.
+        /// Moves movable item.
         /// </summary>
-        /// <param name="movableObject">Movable object.</param>
-        /// <param name="gameObjects">Game objects.</param>
+        /// <param name="movableItem">Movable item.</param>
+        /// <param name="gameItems">Game items.</param>
         /// <param name="freeCells">Free cells.</param>
-        public override void Move(IMovable movableObject, List<IItem> gameObjects, List<NewObjectCoordinates> freeCells)
+        public override void Move(IMovable movableItem, List<IItem> gameItems, List<NewItemCoordinates> freeCells)
         {
-            List<Animal> itemsAround = Helper.LookAround(movableObject, gameObjects, movableObject.Vision).Cast<Animal>().ToList();
-            List<Herbivore> herbivoresAround = Helper.FindObjectsAroundByType<Herbivore>(itemsAround);
+            List<Animal> itemsAround = Helper.LookAround(movableItem, gameItems, movableItem.Vision).Cast<Animal>().ToList();
+            List<Herbivore> herbivoresAround = Helper.FindItemsAroundByType<Herbivore>(itemsAround);
 
-            Herbivore? herbivore = Helper.FindNearestObject(herbivoresAround, this);
+            Herbivore? herbivore = Helper.FindNearestItem(herbivoresAround, this);
 
             GetDamage(ConstantsRepository.HealthDecreaser);
             
@@ -46,7 +46,7 @@ namespace GameEngine.Entities
         /// </summary>
         /// <param name="nearestAnimal">Nearest animal.</param>
         /// <param name="freeCells">Free cells.</param>
-        public void Hunt(Animal nearestAnimal, List<NewObjectCoordinates> freeCells)
+        public void Hunt(Animal nearestAnimal, List<NewItemCoordinates> freeCells)
         {
             Relocate(freeCells[Helper.CalculateMinDistanceToFoodByFreeCells(freeCells, nearestAnimal)].NewXCoordinate,
                 freeCells[Helper.CalculateMinDistanceToFoodByFreeCells(freeCells, nearestAnimal)].NewYCoordinate);

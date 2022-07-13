@@ -15,35 +15,35 @@ namespace GameEngine.Helpers
         /// </summary>
         /// <param name="newXPosition">New X position.</param>
         /// <param name="newYPosition">New Y position.</param>
-        /// <param name="gameObjects">Game objects.</param>
+        /// <param name="gameItems">Game items.</param>
         /// <returns>Is cell occupied.</returns>
-        public static bool IsCellOccupied(int newXPosition, int newYPosition, List<IItem> gameObjects)
+        public static bool IsCellOccupied(int newXPosition, int newYPosition, List<IItem> gameItems)
         {
-            return NearByObjects(newXPosition, newYPosition, gameObjects).Any();
+            return NearByItems(newXPosition, newYPosition, gameItems).Any();
         }
 
         /// <summary>
-        /// Looks around board from object based on it vision.
+        /// Looks around board from item based on it vision.
         /// </summary>
-        /// <param name="currentObject">Current object.</param>
-        /// <param name="gameObjects">Game objects.</param>
-        /// <param name="vision">How many cells objects can sense other objects.</param>
-        /// <returns>Enumerable list with nearby objects.</returns>
-        public static IEnumerable<T> LookAround<T>(T currentObject, List<T> gameObjects, int vision = 1) where T : IItem
+        /// <param name="currentItem">Current item.</param>
+        /// <param name="gameItems">Game items.</param>
+        /// <param name="vision">How many cells items can sense other items.</param>
+        /// <returns>Enumerable list with nearby items.</returns>
+        public static IEnumerable<T> LookAround<T>(T currentItem, List<T> gameItems, int vision = 1) where T : IItem
         {
-            return from objectForSearch in gameObjects
-                where ObjectsAreInRange<T>(currentObject, objectForSearch, vision)
-                select objectForSearch;
+            return from itemForSearch in gameItems
+                where ItemsAreInRange<T>(currentItem, itemForSearch, vision)
+                select itemForSearch;
         }
 
         /// <summary>
-        /// Finds objects around by type.
+        /// Finds items around by type.
         /// </summary>
-        /// <param name="objectsAround">Objects around.</param>
-        /// <returns>Objects around by type.</returns>
-        public static List<T> FindObjectsAroundByType<T>(List<Animal> objectsAround) where T : Animal
+        /// <param name="animalsAround">Animals around.</param>
+        /// <returns>Items around by type.</returns>
+        public static List<T> FindItemsAroundByType<T>(List<Animal> animalsAround) where T : Animal
         {
-            return objectsAround
+            return animalsAround
                 .Where(animal => typeof(T).IsAssignableFrom(animal.GetType()) && animal.IsActive && animal.IsVisible)
                 .Select(animal => (T)animal)
                 .ToList();
@@ -61,21 +61,21 @@ namespace GameEngine.Helpers
             Math.Pow(pointsCoordinates.FirstYPoint - pointsCoordinates.SecondYPoint, 2);
     
         /// <summary>
-        /// Finds the nearest object to carnivore's position.
+        /// Finds the nearest item to carnivore's position.
         /// </summary>
-        /// <param name="objectsAround">Objects around.</param>
+        /// <param name="itemsAround">Items around.</param>
         /// <param name="carnivore">Carnivore.</param>
-        /// <returns>Nearest object to hunt.</returns>
-        public static T? FindNearestObject<T>(List<T> objectsAround, Carnivore carnivore) where T : IItem
+        /// <returns>Nearest item to hunt.</returns>
+        public static T? FindNearestItem<T>(List<T> itemsAround, Carnivore carnivore) where T : IItem
         {
-            T? nearestObject = default(T);
+            T? nearestItem = default(T);
 
-            if (objectsAround.Count != 0)
+            if (itemsAround.Count != 0)
             {
-                nearestObject = CalculateMinDistanceToObject(objectsAround, carnivore);
+                nearestItem = CalculateMinDistanceToItem(itemsAround, carnivore);
             }
 
-            return nearestObject;
+            return nearestItem;
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace GameEngine.Helpers
         /// <param name="freeCells">Free cells.</param>
         /// <param name="food">Food.</param>
         /// <returns>Index of minimal distance cell.</returns>
-        public static int CalculateMinDistanceToFoodByFreeCells(List<NewObjectCoordinates> freeCells, Animal food)
+        public static int CalculateMinDistanceToFoodByFreeCells(List<NewItemCoordinates> freeCells, Animal food)
         {
             double distance;
             int counter = 0;
@@ -115,26 +115,26 @@ namespace GameEngine.Helpers
         }
 
         /// <summary>
-        /// Calculates minimal distance to the food among objects in the carnivore's vision by Pythagorian theorem. 
+        /// Calculates minimal distance to the food among items in the carnivore's vision by Pythagorian theorem. 
         /// </summary>
-        /// <param name="objectsAround">Objects around.</param>
+        /// <param name="itemsAround">Items around.</param>
         /// <param name="carnivore">Carnivore.</param>
         /// <returns>Nearest food to carnivore.</returns>
-        private static T? CalculateMinDistanceToObject<T>(List<T> objectsAround, Carnivore carnivore) where T : IItem
+        private static T? CalculateMinDistanceToItem<T>(List<T> itemsAround, Carnivore carnivore) where T : IItem
         {
             double distance;
             int counter = 0;
             int nearestFoodIndex = 0;
             double minFoodDistance = Double.MaxValue;
 
-            foreach (var objectAround in objectsAround)
+            foreach (var itemAround in itemsAround)
             {
                 PointsCoordinates pointsCoordinates = new PointsCoordinates
                 {
                     FirstXPoint = carnivore.CoordinateX,
-                    SecondXPoint = objectAround.CoordinateX,
+                    SecondXPoint = itemAround.CoordinateX,
                     FirstYPoint = carnivore.CoordinateY,
-                    SecondYPoint = objectAround.CoordinateY
+                    SecondYPoint = itemAround.CoordinateY
                 };
 
                 distance = CalculateSquareDistanceByPythagoras(pointsCoordinates);
@@ -147,7 +147,7 @@ namespace GameEngine.Helpers
                 counter++;
             }
 
-            return objectsAround[nearestFoodIndex];
+            return itemsAround[nearestFoodIndex];
         }
 
         /// <summary>
@@ -161,48 +161,48 @@ namespace GameEngine.Helpers
             Math.Abs(carnivore.CoordinateY - food.CoordinateY) > 1;
 
         /// <summary>
-        /// Returns all objects in the range of vision, excluding itself.
+        /// Returns all items in the range of vision, excluding itself.
         /// </summary>
-        /// <param name="currentObject">Current object.</param>
-        /// <param name="objectForSearch">Object for search.</param>
-        /// <param name="vision">How many cells object can sense other objects.</param>
-        /// <returns>Are the objects in the range of vision, excluding itself.</returns>
-        private static bool ObjectsAreInRange<T>(T currentObject, T objectForSearch, int vision) where T : IItem
+        /// <param name="currentItem">Current item.</param>
+        /// <param name="itemForSearch">Item for search.</param>
+        /// <param name="vision">How many cells item can sense other items.</param>
+        /// <returns>Are the items in the range of vision, excluding itself.</returns>
+        private static bool ItemsAreInRange<T>(T currentItem, T itemForSearch, int vision) where T : IItem
         {
-            bool isOwnPosition = currentObject.CoordinateX == objectForSearch.CoordinateX &&
-                                 currentObject.CoordinateY == objectForSearch.CoordinateY;
+            bool isOwnPosition = currentItem.CoordinateX == itemForSearch.CoordinateX &&
+                                 currentItem.CoordinateY == itemForSearch.CoordinateY;
             return !isOwnPosition &&
-                objectForSearch.CoordinateX >= currentObject.CoordinateX - vision &&
-                objectForSearch.CoordinateX <= currentObject.CoordinateX + vision &&
-                objectForSearch.CoordinateY >= currentObject.CoordinateY - vision &&
-                objectForSearch.CoordinateY <= currentObject.CoordinateY + vision;
+                itemForSearch.CoordinateX >= currentItem.CoordinateX - vision &&
+                itemForSearch.CoordinateX <= currentItem.CoordinateX + vision &&
+                itemForSearch.CoordinateY >= currentItem.CoordinateY - vision &&
+                itemForSearch.CoordinateY <= currentItem.CoordinateY + vision;
         }
 
         /// <summary>
-        /// Checks nearby game objects around object.
+        /// Checks nearby game items around item.
         /// </summary>
         /// <param name="newXPosition">New X position.</param>
         /// <param name="newYPosition">New Y position.</param>
-        /// <param name="gameObjects">Game objects.</param>
-        /// <returns>Enumerable list of found game objects around.</returns>
-        private static IEnumerable<IItem> NearByObjects(int newXPosition, int newYPosition, List<IItem> gameObjects)
+        /// <param name="gameItems">Game items.</param>
+        /// <returns>Enumerable list of found game items around.</returns>
+        private static IEnumerable<IItem> NearByItems(int newXPosition, int newYPosition, List<IItem> gameItems)
         {
-            return from gameObject in gameObjects
-                   where CheckForNearByObjects(newXPosition, newYPosition, gameObject)
-                   select gameObject;
+            return from gameItem in gameItems
+                   where CheckForNearByItems(newXPosition, newYPosition, gameItem)
+                   select gameItem;
         }
 
         /// <summary>
-        /// Checks for nearby game objects.
+        /// Checks for nearby game items.
         /// </summary>
         /// <param name="newXPosition">New X position.</param>
         /// <param name="newYPosition">New Y position.</param>
-        /// <param name="gameObject">Game object.</param>
-        /// <returns>Is object found another object around it.</returns>
-        private static bool CheckForNearByObjects(int newXPosition, int newYPosition, IItem gameObject)
+        /// <param name="gameItem">Game item.</param>
+        /// <returns>Is item found another item around it.</returns>
+        private static bool CheckForNearByItems(int newXPosition, int newYPosition, IItem gameItem)
         {
-            return gameObject.CoordinateX.Equals(newXPosition) &&
-                         gameObject.CoordinateY.Equals(newYPosition);
+            return gameItem.CoordinateX.Equals(newXPosition) &&
+                         gameItem.CoordinateY.Equals(newYPosition);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace GameEngine.Helpers
         /// <param name="freeCells">Free cells.</param>
         /// <param name="carnivore">Carnivore.</param>
         /// <returns>Index of maximal distance cell.</returns>
-        public static int CalculateMaxDistanceFromCarnivoreByFreeCells(List<NewObjectCoordinates> freeCells, Carnivore carnivore)
+        public static int CalculateMaxDistanceFromCarnivoreByFreeCells(List<NewItemCoordinates> freeCells, Carnivore carnivore)
         {
             double distance;
             int counter = 0;
@@ -307,35 +307,35 @@ namespace GameEngine.Helpers
         }
 
         /// <summary>
-        /// Checks object is active.  
+        /// Checks item is active.  
         /// </summary>
-        /// <param name="gameObject">Game object.</param>
-        /// <returns>Is object active.</returns>
-        public static bool IsObjectActive(IItem gameObject)
+        /// <param name="gameItem">Game item.</param>
+        /// <returns>Is item active.</returns>
+        public static bool IsItemActive(IItem gameItem)
         {
-            return gameObject.IsActive;
+            return gameItem.IsActive;
         }
 
         /// <summary>
-        /// Calculates a new position based on the free cells around object.
+        /// Calculates a new position based on the free cells around item.
         /// </summary>
         /// <param name="board">Board.</param>
-        /// <param name="gameObjects">Game objects.</param>
-        /// <param name="gameObject">Game object.</param>
+        /// <param name="gameItems">Game items.</param>
+        /// <param name="gameItem">Game item.</param>
         /// <returns>Free cells.</returns>
-        public static List<NewObjectCoordinates> CalculateCorrectPosition(Board board, List<IItem> gameObjects, IItem gameObject)
+        public static List<NewItemCoordinates> CalculateCorrectPosition(Board board, List<IItem> gameItems, IItem gameItem)
         {
-            List<NewObjectCoordinates> freeCellsToMove = new List<NewObjectCoordinates>();
-            NewObjectCoordinates newCoordinates;
+            List<NewItemCoordinates> freeCellsToMove = new List<NewItemCoordinates>();
+            NewItemCoordinates newCoordinates;
 
-            for (int newXCoordinate = gameObject.CoordinateX - 1; newXCoordinate <= gameObject.CoordinateX + 1; newXCoordinate++)
+            for (int newXCoordinate = gameItem.CoordinateX - 1; newXCoordinate <= gameItem.CoordinateX + 1; newXCoordinate++)
             {
-                for (int newYCoordinate = gameObject.CoordinateY - 1; newYCoordinate <= gameObject.CoordinateY + 1; newYCoordinate++)
+                for (int newYCoordinate = gameItem.CoordinateY - 1; newYCoordinate <= gameItem.CoordinateY + 1; newYCoordinate++)
                 {
                     if (!board.IsCellOnBoard(newXCoordinate, newYCoordinate, board.GameBoard) &&
-                        !IsCellOccupied(newXCoordinate, newYCoordinate, gameObjects))
+                        !IsCellOccupied(newXCoordinate, newYCoordinate, gameItems))
                     {
-                        newCoordinates = new NewObjectCoordinates
+                        newCoordinates = new NewItemCoordinates
                         {
                             NewXCoordinate = newXCoordinate,
                             NewYCoordinate = newYCoordinate
@@ -345,10 +345,10 @@ namespace GameEngine.Helpers
                     }
                 }
             }
-            newCoordinates = new NewObjectCoordinates
+            newCoordinates = new NewItemCoordinates
             {
-                NewXCoordinate = gameObject.CoordinateX,
-                NewYCoordinate = gameObject.CoordinateY
+                NewXCoordinate = gameItem.CoordinateX,
+                NewYCoordinate = gameItem.CoordinateY
             };
             freeCellsToMove.Add(newCoordinates);
 

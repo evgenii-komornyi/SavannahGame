@@ -3,7 +3,7 @@
 namespace GameEngine.Interfaces
 {
     /// <summary>
-    /// The class contains behaviour of the reproducable objects.
+    /// The class contains behaviour of the reproducable items.
     /// </summary>
     public interface IReproducable
     {
@@ -11,9 +11,9 @@ namespace GameEngine.Interfaces
         /// Reproduces new child.
         /// </summary>
         /// <param name="board">Board.</param>
-        /// <param name="gameObjects">Game objects.</param>
+        /// <param name="gameItems">Game items.</param>
         /// <param name="pair">Pair.</param>
-        /// <returns>New game object by type.</returns>
-        IItem? Reproduce(Board board, List<IItem> gameObjects, List<Pair> pair);
+        /// <returns>New game item by type.</returns>
+        IItem? Reproduce(Board board, List<IItem> gameItems, List<Pair> pair);
     }
 }

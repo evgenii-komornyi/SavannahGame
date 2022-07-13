@@ -1,7 +1,7 @@
 ﻿namespace GameEngine.Interfaces
 {
     /// <summary>
-    /// The class contains properties and behaviour of the game objects. 
+    /// The class contains properties and behaviour of the game items. 
     /// </summary>
     public interface IItem
     {

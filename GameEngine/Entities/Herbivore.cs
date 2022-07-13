@@ -10,15 +10,15 @@ namespace GameEngine.Entities
     public abstract class Herbivore : Animal
     {
         /// <summary>
-        /// Moves movable object. 
+        /// Moves movable item. 
         /// </summary>
-        /// <param name="movableObject">Movable object.</param>
-        /// <param name="gameObjects">Game objects.</param>
+        /// <param name="movableItem">Movable item.</param>
+        /// <param name="gameItems">Game items.</param>
         /// <param name="freeCells">Free cells.</param>
-        public override void Move(IMovable movableObject, List<IItem> gameObjects, List<NewObjectCoordinates> freeCells)
+        public override void Move(IMovable movableItem, List<IItem> gameItems, List<NewItemCoordinates> freeCells)
         {
-            List<Animal> animalsAround = Helper.LookAround(movableObject, gameObjects, movableObject.Vision).Cast<Animal>().ToList();
-            List<Carnivore> carnivoresAround = Helper.FindObjectsAroundByType<Carnivore>(animalsAround);
+            List<Animal> animalsAround = Helper.LookAround(movableItem, gameItems, movableItem.Vision).Cast<Animal>().ToList();
+            List<Carnivore> carnivoresAround = Helper.FindItemsAroundByType<Carnivore>(animalsAround);
 
             Carnivore? carnivore = Helper.FindNearestCarnivore(carnivoresAround, this);
 
@@ -42,7 +42,7 @@ namespace GameEngine.Entities
         /// </summary>
         /// <param name="nearestHunter">Nearest hunter.</param>
         /// <param name="freeCells">Free cells.</param>
-        protected virtual void RunAway(Carnivore nearestHunter, List<NewObjectCoordinates> freeCells)
+        protected virtual void RunAway(Carnivore nearestHunter, List<NewItemCoordinates> freeCells)
         {
             Relocate(freeCells[Helper.CalculateMaxDistanceFromCarnivoreByFreeCells(freeCells, nearestHunter)].NewXCoordinate,
                 freeCells[Helper.CalculateMaxDistanceFromCarnivoreByFreeCells(freeCells, nearestHunter)].NewYCoordinate);

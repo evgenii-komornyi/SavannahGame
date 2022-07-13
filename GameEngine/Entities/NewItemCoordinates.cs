@@ -1,9 +1,9 @@
 ﻿namespace GameEngine.Entities
 {
     /// <summary>
-    /// The class contains new animal coordinates.
+    /// The class contains new item coordinates.
     /// </summary>
-    public class NewObjectCoordinates
+    public class NewItemCoordinates
     {
         /// <summary>
         /// New X coordinate.

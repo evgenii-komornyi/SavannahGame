@@ -15,41 +15,41 @@ namespace UI
     {
         private readonly IUserInterface _userInterface;
         private readonly IWindow _window;
-        private readonly IObjectManager _objectManager;
+        private readonly IItemManager _itemManager;
         private readonly IPairManager _pairManager;
         private readonly IMovementManager _movementManager;
 
         private Board _board;
-        private List<IItem> _gameObjects;
+        private List<IItem> _gameItems;
         private List<Pair> _pairs;
-        private List<IItem> _childrenGameObjects;
+        private List<IItem> _childrenGameItems;
 
-        private Dictionary<ConsoleKey, GameObjectsInfo> _gameObjectsInfo = new Dictionary<ConsoleKey, GameObjectsInfo>();
+        private Dictionary<ConsoleKey, GameItemsInfo> _gameItemsInfo = new Dictionary<ConsoleKey, GameItemsInfo>();
 
         /// <summary>
         /// The class contains all logic layer to start a game from User Interface.
         /// </summary>
         /// <param name="userInterface">User Interface.</param>
         /// <param name="window">Window.</param>
-        /// <param name="objectManager">Object manager.</param>
+        /// <param name="itemManager">Item manager.</param>
         /// <param name="pairManager">Pair manager.</param>
         /// <param name="movementManager">Movement manager.</param>
         public GameManager(
             IUserInterface userInterface,
             IWindow window,
-            IObjectManager objectManager,
+            IItemManager itemManager,
             IPairManager pairManager,
             IMovementManager movementManager)
         {
             _userInterface = userInterface;
             _window = window;
-            _objectManager = objectManager;
+            _itemManager = itemManager;
             _pairManager = pairManager;
             _movementManager = movementManager;
             _board = new Board();
-            _gameObjects = new List<IItem>();
+            _gameItems = new List<IItem>();
             _pairs = new List<Pair>();
-            _childrenGameObjects = new List<IItem>();
+            _childrenGameItems = new List<IItem>();
             LoadInstancesOfDllChildrenClasses();
         }
 
@@ -65,7 +65,7 @@ namespace UI
             _userInterface.DrawBoard(_board);
             _window.SetCursorPosition(0, 20);
 
-            foreach (var info in _gameObjectsInfo)
+            foreach (var info in _gameItemsInfo)
             {
                 _window.SetFontColor(info.Value.Color);
                 _userInterface.ShowMessage($"Press {info.Key} - to add {info.Value.Specie};");
@@ -89,38 +89,30 @@ namespace UI
             {
                 Console.CursorVisible = false;
 
-                _board.FillBoardWithObjects(_gameObjects);
+                _board.FillBoardWithItems(_gameItems);
 
                 _userInterface.DrawBoard(_board);
-                _board.PrepareBoard(_gameObjects);
+                _board.PrepareBoard(_gameItems);
                 
-                _movementManager.Act(_gameObjects, _board);
+                _movementManager.Act(_gameItems, _board);
 
-                if (_pairs.Count != 0)
-                {
-                    _pairManager.RemoveNotExistingPairs(_pairs);
-                }
+                _pairManager.RemoveNotExistingPairs(_pairs);
                
-                _pairManager.CheckPairForExistence(_pairs, _board, _gameObjects, _childrenGameObjects);
+                _pairManager.CheckPairForExistence(_pairs, _board, _gameItems, _childrenGameItems);
 
-                Pair newPair = _pairManager.CreatePair(_gameObjects);
-
-                if (newPair != null)
-                {
-                    _pairs.Add(newPair);
-                }
+                _pairManager.AddPairToList(_pairManager.CreatePair(_gameItems), _pairs);
                 
-                _objectManager.ProcessChildrenObjects(_gameObjects, _childrenGameObjects);
+                _itemManager.ProcessChildrenItems(_gameItems, _childrenGameItems);
 
-                _objectManager.RemoveInactiveObjects(_gameObjects);
+                _itemManager.RemoveInactiveItems(_gameItems);
                 Thread.Sleep(ConstantsRepository.ThreadSleep);
                 ConsoleKey? consoleKey = _userInterface.GetInputKey();
             
-                foreach (var info in _gameObjectsInfo)
+                foreach (var info in _gameItemsInfo)
                 {
                     if (consoleKey == info.Key)
                     {
-                        _objectManager.AddObject((IItem)Activator.CreateInstance(info.Value.Type), _gameObjects, _board);
+                        _itemManager.AddItem((IItem)Activator.CreateInstance(info.Value.Type), _gameItems, _board);
                     }
                 }    
 
@@ -137,13 +129,13 @@ namespace UI
 
             foreach (var plugin in plugins)
             {
-                GameObjectsInfo info = new GameObjectsInfo
+                GameItemsInfo info = new GameItemsInfo
                 {
                     Specie = plugin.Specie,
                     Color = plugin.Color,
                     Type = plugin.GetType()
                 };
-                _gameObjectsInfo.Add(plugin.Letter, info);                
+                _gameItemsInfo.Add(plugin.Letter, info);                
             }
         }
 

@@ -5,24 +5,24 @@ using GameEngine.Interfaces;
 namespace GameEngine.Services.Managers
 {
     /// <summary>
-    /// The class contains behaviour of the movable game objects.
+    /// The class contains behaviour of the movable game items.
     /// </summary>
     public class MovementManager : IMovementManager
     {
         /// <summary>
-        /// Moves game objects on the board.
+        /// Moves game items on the board.
         /// </summary>
         /// <param name="board">Board.</param>
-        /// <param name="gameObjects">Game objects.</param>
-        public void Act(List<IItem> gameObjects, Board board)
+        /// <param name="gameItems">Game items.</param>
+        public void Act(List<IItem> gameItems, Board board)
         {
-            foreach (var item in gameObjects.Cast<IMovable>())
+            foreach (var item in gameItems.Cast<IMovable>())
             {
-                if (Helper.IsObjectActive(item))
+                if (Helper.IsItemActive(item))
                 {
-                    List<NewObjectCoordinates> freeCellsToMove = Helper.CalculateCorrectPosition(board, gameObjects, item);
+                    List<NewItemCoordinates> freeCellsToMove = Helper.CalculateCorrectPosition(board, gameItems, item);
 
-                    item.Move(item, gameObjects, freeCellsToMove);
+                    item.Move(item, gameItems, freeCellsToMove);
                 }
             }
         }

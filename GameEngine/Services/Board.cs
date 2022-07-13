@@ -21,22 +21,22 @@ namespace GameEngine
         }
 
         /// <summary>
-        /// Fills the board with the game objects
+        /// Fills the board with the game items.
         /// </summary>
-        /// <param name="gameObjects">Game objects.</param>
-        public void FillBoardWithObjects(List<IItem> gameObjects)
+        /// <param name="gameItems">Game items.</param>
+        public void FillBoardWithItems(List<IItem> gameItems)
         {
-            foreach (var gameObject in gameObjects)
+            foreach (var gameItem in gameItems)
             {
-                PutObjectOnBoard(gameObject);
+                PutItemOnBoard(gameItem);
             }
         }
 
         /// <summary>
         /// Prepares clean board for new iteration.
         /// </summary>
-        /// <param name="gameObjects">Game objects.</param>
-        public void PrepareBoard(List<IItem> gameObjects)
+        /// <param name="gameItems">Game items.</param>
+        public void PrepareBoard(List<IItem> gameItems)
         {
             BoardItem boardItem = new BoardItem
             {
@@ -44,9 +44,9 @@ namespace GameEngine
                 Color = ConsoleColor.Gray
             };
 
-            foreach (var gameObject in gameObjects)
+            foreach (var gameItem in gameItems)
             {
-                GameBoard[gameObject.CoordinateX, gameObject.CoordinateY] = boardItem;
+                GameBoard[gameItem.CoordinateX, gameItem.CoordinateY] = boardItem;
             }
         }
 
@@ -66,19 +66,18 @@ namespace GameEngine
         }
 
         /// <summary>
-        /// Fills the board with the object key. 
+        /// Fills the board with the item key and color. 
         /// </summary>
-        /// <param name="gameObject">Game object.</param>
-        /// <param name="objectKey">Object key.</param>
-        private void PutObjectOnBoard(IItem gameObject)
+        /// <param name="gameItem">Game item.</param>
+        private void PutItemOnBoard(IItem gameItem)
         {
             BoardItem boardItem = new BoardItem
             {
-                Letter = gameObject.Letter.ToString(),
-                Color = gameObject.Color
+                Letter = gameItem.Letter.ToString(),
+                Color = gameItem.Color
             };
 
-            GameBoard[gameObject.CoordinateX, gameObject.CoordinateY] = boardItem;
+            GameBoard[gameItem.CoordinateX, gameItem.CoordinateY] = boardItem;
         }
 
         /// <summary>

@@ -9,20 +9,27 @@ namespace GameEngine.Services.Managers
     public interface IPairManager
     {
         /// <summary>
-        /// Creates new pair for current pairable object, searching opposite free pairable object near by this object. 
+        /// Creates new pair for current pairable item, searching opposite free pairable item near by this item. 
         /// </summary>
-        /// <param name="pairables">Pairables.</param>
+        /// <param name="pairablesItems">Pairable items.</param>
         /// <returns>New pair.</returns>
-        Pair CreatePair(List<IItem> pairables);
+        Pair CreatePair(List<IItem> pairablesItems);
 
         /// <summary>
-        /// Checks pair for existance, and if it is true, then object can reproduce new object after 3 consecutive rounds. 
+        /// Added pair to list.
+        /// </summary>
+        /// <param name="newPair">New pair.</param>
+        /// <param name="pairs">Pairs.</param>
+        void AddPairToList(Pair newPair, List<Pair> pairs);
+
+        /// <summary>
+        /// Checks pair for existance, and if it is true, then item can reproduce new item after 3 consecutive rounds. 
         /// </summary>
         /// <param name="pairsToDestroy">Pairs to destroy.</param>
         /// <param name="board">Board.</param>
-        /// <param name="gameObjects">Game objects.</param>
-        /// <param name="reproducedObjects">Reproduced objects.</param>
-        void CheckPairForExistence(List<Pair> pairsToDestroy, Board board, List<IItem> gameObjects, List<IItem> reproducedObjects);
+        /// <param name="gameItems">Game items.</param>
+        /// <param name="reproducedItems">Reproduced items.</param>
+        void CheckPairForExistence(List<Pair> pairsToDestroy, Board board, List<IItem> gameItems, List<IItem> reproducedItems);
 
         /// <summary>
         /// Removes pairs that end their existence. 

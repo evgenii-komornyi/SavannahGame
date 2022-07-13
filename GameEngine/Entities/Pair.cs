@@ -33,14 +33,14 @@ namespace GameEngine.Entities
         /// Reproduces new child.
         /// </summary>
         /// <param name="board">Board.</param>
-        /// <param name="gameObjects">Game objects.</param>
+        /// <param name="gameItems">Game items.</param>
         /// <param name="pair">Pair.</param>
-        /// <returns>New game object by type.</returns>
-        public IItem? Reproduce(Board board, List<IItem> gameObjects, List<Pair> pair)
+        /// <returns>New game item by type.</returns>
+        public IItem? Reproduce(Board board, List<IItem> gameItems, List<Pair> pair)
         {
             Animal? female = FindFemale(pair);
             Type femaleType = female.GetType();
-            NewObjectCoordinates? birthCoordinates = CalculateFreeCellsToBirth(board, gameObjects, female);
+            NewItemCoordinates? birthCoordinates = CalculateFreeCellsToBirth(board, gameItems, female);
             
             IItem child = CreateInstanceOfType(femaleType); 
             if (child != null && birthCoordinates != null)
@@ -87,20 +87,20 @@ namespace GameEngine.Entities
         /// Calculates first free cell for birth child near female animal.
         /// </summary>
         /// <param name="board">Board.</param>
-        /// <param name="gameObjects">Game objects.</param>
-        /// <returns>New object coordinates for child.</returns>
-        private NewObjectCoordinates? CalculateFreeCellsToBirth(Board board, List<IItem> gameObjects, Animal female)
+        /// <param name="gameItems">Game items.</param>
+        /// <returns>New item coordinates for child.</returns>
+        private NewItemCoordinates? CalculateFreeCellsToBirth(Board board, List<IItem> gameItems, Animal female)
         {
-            NewObjectCoordinates? newCoordinates = null;
+            NewItemCoordinates? newCoordinates = null;
 
             for (int newXCoordinate = female.CoordinateX - 1; newXCoordinate <= female.CoordinateX + 1; newXCoordinate++)
             {
                 for (int newYCoordinate = female.CoordinateY - 1; newYCoordinate <= female.CoordinateY + 1; newYCoordinate++)
                 {
                     if (!board.IsCellOnBoard(newXCoordinate, newYCoordinate, board.GameBoard) &&
-                        !Helper.IsCellOccupied(newXCoordinate, newYCoordinate, gameObjects))
+                        !Helper.IsCellOccupied(newXCoordinate, newYCoordinate, gameItems))
                     {
-                        newCoordinates = new NewObjectCoordinates
+                        newCoordinates = new NewItemCoordinates
                         {
                             NewXCoordinate = newXCoordinate,
                             NewYCoordinate = newYCoordinate

@@ -11,18 +11,18 @@ namespace GameEngine.Services.Managers
     public class PairManager : IPairManager
     {
         /// <summary>
-        /// Creates new pair for current pairable object, searching opposite free pairable object near by this object. 
+        /// Creates new pair for current pairable item, searching opposite free pairable item near by this item. 
         /// </summary>
-        /// <param name="pairables">Pairables.</param>
+        /// <param name="pairableItems">Pairable items.</param>
         /// <returns>New pair.</returns>
-        public Pair CreatePair(List<IItem> pairables)
+        public Pair CreatePair(List<IItem> pairableItems)
         {
             Pair newPair = null;
-            foreach (var currentAnimal in pairables.Cast<Animal>())
+            foreach (var currentAnimal in pairableItems.Cast<Animal>())
             {
                 if (!currentAnimal.IsPaired)
                 {
-                    List<Animal> animalsAround = Helper.LookAround(currentAnimal, pairables).Cast<Animal>().ToList();
+                    List<Animal> animalsAround = Helper.LookAround(currentAnimal, pairableItems).Cast<Animal>().ToList();
 
                     List<Animal> freeOppositeSexAnimalsAround = animalsAround
                         .Where(animal => !animal.Sex.Equals(currentAnimal.Sex) && !animal.IsPaired && animal.GetType() == currentAnimal.GetType())
@@ -49,13 +49,26 @@ namespace GameEngine.Services.Managers
         }
 
         /// <summary>
-        /// Checks pair for existance, and if it is true, then object can reproduce new object after 3 consecutive rounds. 
+        /// Added pair to list.
+        /// </summary>
+        /// <param name="newPair">New pair.</param>
+        /// <param name="pairs">Pairs.</param>
+        public void AddPairToList(Pair newPair, List<Pair> pairs)
+        {
+            if (newPair != null)
+            {
+                pairs.Add(newPair);
+            }
+        }
+
+        /// <summary>
+        /// Checks pair for existance, and if it is true, then item can reproduce new item after 3 consecutive rounds. 
         /// </summary>
         /// <param name="pairsToDestroy">Pairs to destroy.</param>
         /// <param name="board">Board.</param>
-        /// <param name="gameObjects">Game objects.</param>
-        /// <param name="reproducedObjects">Reproduced objects.</param>
-        public void CheckPairForExistence(List<Pair> pairsToDestroy, Board board, List<IItem> gameObjects, List<IItem> reproducedObjects)
+        /// <param name="gameItems">Game items.</param>
+        /// <param name="reproducedItems">Reproduced items.</param>
+        public void CheckPairForExistence(List<Pair> pairsToDestroy, Board board, List<IItem> gameItems, List<IItem> reproducedItems)
         {
             foreach (var pair in pairsToDestroy)
             {
@@ -73,10 +86,10 @@ namespace GameEngine.Services.Managers
 
                         if (pair.RelationshipDuration == ConstantsRepository.RelationshipDuration)
                         {
-                            IItem? newItem = pair.Reproduce(board, gameObjects, pairsToDestroy);
+                            IItem? newItem = pair.Reproduce(board, gameItems, pairsToDestroy);
                             if (newItem != null)
                             {
-                                reproducedObjects.Add(newItem);
+                                reproducedItems.Add(newItem);
                             }
                             pair.RelationshipDuration = 0;
                         }
@@ -102,8 +115,11 @@ namespace GameEngine.Services.Managers
         /// </summary>
         public void RemoveNotExistingPairs(List<Pair> pairs)
         {
-            IEnumerable<Pair> doesNotExistingPairs = CheckForExistingPairs(pairs);
-            pairs.RemoveAll(currentAnimal => doesNotExistingPairs.Contains(currentAnimal));
+            if (pairs.Count != 0)
+            {
+                IEnumerable<Pair> doesNotExistingPairs = CheckForExistingPairs(pairs);
+                pairs.RemoveAll(currentAnimal => doesNotExistingPairs.Contains(currentAnimal));
+            }
         }
 
         /// <summary>

@@ -3,7 +3,7 @@
     /// <summary>
     /// The class contains properties for creating instants in the user inteface.
     /// </summary>
-    public class GameObjectsInfo
+    public class GameItemsInfo
     {
         /// <summary>
         /// Item's specie.

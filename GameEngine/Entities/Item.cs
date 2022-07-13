@@ -3,7 +3,7 @@
 namespace GameEngine.Entities
 {
     /// <summary>
-    /// The class contains properties and behaviour of the game objects. 
+    /// The class contains properties and behaviour of the game items. 
     /// </summary>
     public abstract class Item : IItem
     {
