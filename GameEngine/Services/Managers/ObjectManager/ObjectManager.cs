@@ -54,13 +54,14 @@ namespace GameEngine.Services.Managers
         }
 
         /// <summary>
-        /// Adds children objects to common game objects' list.
+        /// Adds children objects to common game objects' list and clear children list.
         /// </summary>
         /// <param name="gameObjects">Game objects.</param>
         /// <param name="childrenObjects">Children objects.</param>
-        public void AddChildrenObject(List<IItem> gameObjects, List<IItem> childrenObjects)
+        public void ProcessChildrenObjects(List<IItem> gameObjects, List<IItem> childrenObjects)
         {
             gameObjects.AddRange(childrenObjects);
+            childrenObjects.Clear();
         } 
 
         /// <summary>

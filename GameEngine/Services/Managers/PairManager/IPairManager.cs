@@ -9,15 +9,11 @@ namespace GameEngine.Services.Managers
     public interface IPairManager
     {
         /// <summary>
-        /// Pair.
-        /// </summary>
-        Pair? Pair { get; }
-
-        /// <summary>
         /// Creates new pair for current pairable object, searching opposite free pairable object near by this object. 
         /// </summary>
         /// <param name="pairables">Pairables.</param>
-        void CreatePair(List<IItem> pairables);
+        /// <returns>New pair.</returns>
+        Pair CreatePair(List<IItem> pairables);
 
         /// <summary>
         /// Checks pair for existance, and if it is true, then object can reproduce new object after 3 consecutive rounds. 
@@ -31,6 +27,6 @@ namespace GameEngine.Services.Managers
         /// <summary>
         /// Removes pairs that end their existence. 
         /// </summary>
-        void RemoveNonExistsPairs(List<Pair> pairs);
+        void RemoveNotExistingPairs(List<Pair> pairs);
     }
 }

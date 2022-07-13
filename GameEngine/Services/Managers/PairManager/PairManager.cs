@@ -11,16 +11,13 @@ namespace GameEngine.Services.Managers
     public class PairManager : IPairManager
     {
         /// <summary>
-        /// Pair.
-        /// </summary>
-        public Pair? Pair { get; private set; }
-
-        /// <summary>
         /// Creates new pair for current pairable object, searching opposite free pairable object near by this object. 
         /// </summary>
         /// <param name="pairables">Pairables.</param>
-        public void CreatePair(List<IItem> pairables)
+        /// <returns>New pair.</returns>
+        public Pair CreatePair(List<IItem> pairables)
         {
+            Pair newPair = null;
             foreach (var currentAnimal in pairables.Cast<Animal>())
             {
                 if (!currentAnimal.IsPaired)
@@ -33,23 +30,22 @@ namespace GameEngine.Services.Managers
 
                     Animal? animalToPair = freeOppositeSexAnimalsAround.FirstOrDefault();
 
-                    if (animalToPair == null)
+                    if (animalToPair != null)
                     {
-                        return;
+                        newPair = new Pair
+                        {
+                            FirstAnimal = currentAnimal,
+                            SecondAnimal = animalToPair,
+                            IsPairExist = true
+                        };
+
+                        newPair.FirstAnimal.IsPaired = true;
+                        newPair.SecondAnimal.IsPaired = true;
                     }
-
-                    Pair newPair = new Pair
-                    {
-                        FirstAnimal = currentAnimal,
-                        SecondAnimal = animalToPair,
-                        IsPairExist = true
-                    };
-
-                    newPair.FirstAnimal.IsPaired = true;
-                    newPair.SecondAnimal.IsPaired = true;
-                    Pair = newPair;
                 }
             }
+
+            return newPair;
         }
 
         /// <summary>
@@ -104,13 +100,10 @@ namespace GameEngine.Services.Managers
         /// <summary>
         /// Removes pairs that end their existence. 
         /// </summary>
-        public void RemoveNonExistsPairs(List<Pair> pairs)
+        public void RemoveNotExistingPairs(List<Pair> pairs)
         {
-            if (pairs.Count != 0)
-            {
-                IEnumerable<Pair> doesNotExistingPairs = CheckForExistingPairs(pairs);
-                pairs.RemoveAll(currentAnimal => doesNotExistingPairs.Contains(currentAnimal));
-            }
+            IEnumerable<Pair> doesNotExistingPairs = CheckForExistingPairs(pairs);
+            pairs.RemoveAll(currentAnimal => doesNotExistingPairs.Contains(currentAnimal));
         }
 
         /// <summary>

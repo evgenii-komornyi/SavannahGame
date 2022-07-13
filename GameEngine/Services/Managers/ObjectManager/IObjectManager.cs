@@ -20,7 +20,7 @@ namespace GameEngine.Services.Managers
         /// </summary>
         /// <param name="gameObjects">Game objects.</param>
         /// <param name="childrenObjects">Children.</param>
-        void AddChildrenObject(List<IItem> gameObjects, List<IItem> childrenObjects);
+        void ProcessChildrenObjects(List<IItem> gameObjects, List<IItem> childrenObjects);
 
         /// <summary>
         /// Removes all inactive objects from board. 

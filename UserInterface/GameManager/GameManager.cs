@@ -88,7 +88,6 @@ namespace UI
             while (isGameOnGoing)
             {
                 Console.CursorVisible = false;
-                Pair? currentPair = _pairManager.Pair;
 
                 _board.FillBoardWithObjects(_gameObjects);
 
@@ -97,19 +96,21 @@ namespace UI
                 
                 _movementManager.Act(_gameObjects, _board);
 
-                _pairManager.RemoveNonExistsPairs(_pairs);
-
+                if (_pairs.Count != 0)
+                {
+                    _pairManager.RemoveNotExistingPairs(_pairs);
+                }
+               
                 _pairManager.CheckPairForExistence(_pairs, _board, _gameObjects, _childrenGameObjects);
 
-                _pairManager.CreatePair(_gameObjects);
+                Pair newPair = _pairManager.CreatePair(_gameObjects);
 
-                if (currentPair != null)
+                if (newPair != null)
                 {
-                    _pairs.Add(currentPair);
+                    _pairs.Add(newPair);
                 }
-
-                _objectManager.AddChildrenObject(_gameObjects, _childrenGameObjects);
-                _childrenGameObjects.Clear();
+                
+                _objectManager.ProcessChildrenObjects(_gameObjects, _childrenGameObjects);
 
                 _objectManager.RemoveInactiveObjects(_gameObjects);
                 Thread.Sleep(ConstantsRepository.ThreadSleep);
