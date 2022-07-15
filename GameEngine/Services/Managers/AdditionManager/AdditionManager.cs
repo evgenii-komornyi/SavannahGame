@@ -6,17 +6,40 @@ using Repository;
 namespace GameEngine.Services.Managers
 {
     /// <summary>
-    /// The class contains controll of the game items list.
+    /// The class contains addition methods for the game items list.
     /// </summary>
-    public class ItemManager : IItemManager
+    public class AdditionManager : IAdditionManager
     {
+        /// <summary>
+        /// Adds new item to the list of the items by user's input on the current board. 
+        /// </summary>
+        /// <param name="consoleKey">Console key. Pressed button on keyboard.</param>
+        /// <param name="gameItemsInfo">Game items info.</param>
+        /// <param name="gameItems">Game items.</param>
+        /// <param name="board">Board.</param>
+        public void ProcessAddNewItem(ConsoleKey? consoleKey, Dictionary<ConsoleKey,GameItemsInfo> gameItemsInfo, List<IItem> gameItems, Board board)
+        {
+            GameItemsInfo itemInfo;
+
+            if (consoleKey != null)
+            {
+                if (gameItemsInfo.ContainsKey((ConsoleKey)consoleKey))
+                {
+                    if (gameItemsInfo.TryGetValue((ConsoleKey)consoleKey, out itemInfo))
+                    {
+                        AddItem((IItem)Activator.CreateInstance(itemInfo.Type), gameItems, board);
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Adds new item to the list of the items on the current board. 
         /// </summary>
         /// <param name="newGameItem">New game item.</param>
         /// <param name="gameItems">Game items.</param>
         /// <param name="board">Board.</param>
-        public void AddItem(IItem newGameItem, List<IItem> gameItems, Board board)
+        private void AddItem(IItem newGameItem, List<IItem> gameItems, Board board)
         {
             List<NewItemCoordinates> freeCells = CalculateFreeCellsToAddItem(gameItems, board);
             if (board.GameBoard.Length > board.GameBoard.Length * ConstantsRepository.HalfOfBoard)
@@ -93,28 +116,6 @@ namespace GameEngine.Services.Managers
             }
 
             return freeCells;
-        }
-
-        /// <summary>
-        /// Removes all inactive items from board. 
-        /// </summary>
-        /// <param name="gameItems">Game items.</param>
-        public void RemoveInactiveItems(List<IItem> gameItems)
-        {
-            IEnumerable<IItem> inactiveItems = CheckForActive(gameItems);
-            gameItems.RemoveAll(currentItem => inactiveItems.Contains(currentItem));
-        }
-
-        /// <summary>
-        /// Checks the active items.
-        /// </summary>
-        /// <param name="gameItems">Game items.</param>
-        /// <returns>Enumerable list of the inactive items.</returns>
-        private IEnumerable<IItem> CheckForActive(List<IItem> gameItems)
-        {
-            return from currentItem in gameItems
-                   where !Helper.IsItemActive(currentItem)
-                   select currentItem;
         }
     }
 }

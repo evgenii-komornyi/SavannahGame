@@ -15,7 +15,8 @@ namespace UI
     {
         private readonly IUserInterface _userInterface;
         private readonly IWindow _window;
-        private readonly IItemManager _itemManager;
+        private readonly IAdditionManager _additionManager;
+        private readonly IDeletionManager _deletionManager;
         private readonly IPairManager _pairManager;
         private readonly IMovementManager _movementManager;
 
@@ -31,19 +32,22 @@ namespace UI
         /// </summary>
         /// <param name="userInterface">User Interface.</param>
         /// <param name="window">Window.</param>
-        /// <param name="itemManager">Item manager.</param>
+        /// <param name="additionManager">Addition manager.</param>
+        /// <param name="deletionManager">Deletion manager.</param>
         /// <param name="pairManager">Pair manager.</param>
         /// <param name="movementManager">Movement manager.</param>
         public GameManager(
             IUserInterface userInterface,
             IWindow window,
-            IItemManager itemManager,
+            IAdditionManager additionManager,
+            IDeletionManager deletionManager,
             IPairManager pairManager,
             IMovementManager movementManager)
         {
             _userInterface = userInterface;
             _window = window;
-            _itemManager = itemManager;
+            _additionManager = additionManager;
+            _deletionManager = deletionManager;
             _pairManager = pairManager;
             _movementManager = movementManager;
             _board = new Board();
@@ -102,19 +106,13 @@ namespace UI
 
                 _pairManager.AddPairToList(_pairManager.CreatePair(_gameItems), _pairs);
                 
-                _itemManager.ProcessChildrenItems(_gameItems, _childrenGameItems);
+                _additionManager.ProcessChildrenItems(_gameItems, _childrenGameItems);
 
-                _itemManager.RemoveInactiveItems(_gameItems);
+                _deletionManager.RemoveInactiveItems(_gameItems);
                 Thread.Sleep(ConstantsRepository.ThreadSleep);
                 ConsoleKey? consoleKey = _userInterface.GetInputKey();
             
-                foreach (var info in _gameItemsInfo)
-                {
-                    if (consoleKey == info.Key)
-                    {
-                        _itemManager.AddItem((IItem)Activator.CreateInstance(info.Value.Type), _gameItems, _board);
-                    }
-                }    
+                _additionManager.ProcessAddNewItem(consoleKey, _gameItemsInfo, _gameItems, _board);    
 
                 isGameOnGoing = (consoleKey != ConsoleKey.Q && consoleKey != ConsoleKey.Escape);
             }

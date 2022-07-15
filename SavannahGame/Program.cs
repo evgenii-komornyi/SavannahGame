@@ -22,7 +22,8 @@ static IHostBuilder CreateHostBuilder(string[] args)
             services.AddSingleton<IGameManager, GameManager>();
             services.AddSingleton<IUserInterface, UserInterface>();
             services.AddSingleton<IWindow, Window>();
-            services.AddSingleton<IItemManager, ItemManager>();
+            services.AddSingleton<IAdditionManager, AdditionManager>();
+            services.AddSingleton<IDeletionManager, DeletionManager>();
             services.AddSingleton<IPairManager, PairManager>();
             services.AddSingleton<IMovementManager, MovementManager>();
 
