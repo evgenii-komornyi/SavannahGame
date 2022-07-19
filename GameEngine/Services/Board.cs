@@ -21,6 +21,17 @@ namespace GameEngine
         }
 
         /// <summary>
+        /// The class contains all logic of the game board.
+        /// </summary>
+        /// <param name="columnsCount">Columns count.</param>
+        /// <param name="rowsCount">Rows count.</param>
+        public Board(int columnsCount, int rowsCount)
+        {
+            GameBoard = new BoardItem[columnsCount, rowsCount];
+            ClearBoard();
+        }
+
+        /// <summary>
         /// Fills the board with the game items.
         /// </summary>
         /// <param name="gameItems">Game items.</param>
