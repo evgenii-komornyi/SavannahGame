@@ -133,6 +133,7 @@ namespace UI
                     Color = plugin.Color,
                     Type = plugin.GetType()
                 };
+
                 _gameItemsInfo.Add(plugin.Letter, info);                
             }
         }
@@ -152,11 +153,8 @@ namespace UI
                 var plugins = assembly.ExportedTypes
                     .Where(t => typeof(IItem).IsAssignableFrom(t)).ToList();
 
-                for (int i = 0; i < plugins.Count; i++)
-                {
-                    var plugin = plugins[i];
-                    result.Add((IItem)Activator.CreateInstance(plugin));
-                }
+                var plugin = plugins.Select(plugin => (IItem)Activator.CreateInstance(plugin));
+                result.Add((IItem)plugin);
             }
 
             return result;

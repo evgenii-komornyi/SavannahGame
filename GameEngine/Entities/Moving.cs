@@ -30,20 +30,10 @@ namespace GameEngine.Entities
         /// <param name="freeCells">Free cells.</param>
         protected void Walk(List<NewItemCoordinates> freeCells)
         {
-            NewItemCoordinates newCoordinates = WalkAround(freeCells);
+            NewItemCoordinates newCoordinates = freeCells[Helper.random.Next(0, freeCells.Count)]; 
             Relocate(newCoordinates.NewXCoordinate, newCoordinates.NewYCoordinate);
-        }
-
-        /// <summary>
-        /// Generates random coordinates to freely move.
-        /// </summary>
-        /// <param name="freeCells">Free cells.</param>
-        /// <returns>Free coordinates to relocate item.</returns>
-        private NewItemCoordinates WalkAround(List<NewItemCoordinates> freeCells)
-        {
-            return freeCells[Helper.random.Next(0, freeCells.Count)];
-        }
-
+        }     
+        
         /// <summary>
         /// Relocates item by coordinates.
         /// </summary>

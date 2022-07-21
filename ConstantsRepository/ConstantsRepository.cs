@@ -14,6 +14,10 @@
         #endregion
 
         #region AnimalSettings
+        public const string Antilope = "Antilope";
+        public const string Lion = "Lion";
+        public const string Rabbit = "Rabbit";
+        public const string Fox = "Fox";
         public const int LionVision = 2;
         public const double MaxHealth = 100;
         public const int FoxVision = 2;

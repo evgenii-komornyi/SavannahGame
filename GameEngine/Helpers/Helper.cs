@@ -17,10 +17,8 @@ namespace GameEngine.Helpers
         /// <param name="newYPosition">New Y position.</param>
         /// <param name="gameItems">Game items.</param>
         /// <returns>Is cell occupied.</returns>
-        public static bool IsCellOccupied(int newXPosition, int newYPosition, List<IItem> gameItems)
-        {
-            return NearByItems(newXPosition, newYPosition, gameItems).Any();
-        }
+        public static bool IsCellOccupied(int newXPosition, int newYPosition, List<IItem> gameItems) => 
+            NearByItems(newXPosition, newYPosition, gameItems).Any();
 
         /// <summary>
         /// Looks around board from item based on it vision.
@@ -108,6 +106,7 @@ namespace GameEngine.Helpers
                     minDistance = distance;
                     nearestFreeCellIndex = counter;
                 }
+
                 counter++;
             }
 
@@ -144,6 +143,7 @@ namespace GameEngine.Helpers
                     minFoodDistance = distance;
                     nearestFoodIndex = counter;
                 }
+
                 counter++;
             }
 
@@ -188,8 +188,8 @@ namespace GameEngine.Helpers
         private static IEnumerable<IItem> NearByItems(int newXPosition, int newYPosition, List<IItem> gameItems)
         {
             return from gameItem in gameItems
-                   where CheckForNearByItems(newXPosition, newYPosition, gameItem)
-                   select gameItem;
+                where CheckForNearByItems(newXPosition, newYPosition, gameItem)
+                select gameItem;
         }
 
         /// <summary>
@@ -199,11 +199,9 @@ namespace GameEngine.Helpers
         /// <param name="newYPosition">New Y position.</param>
         /// <param name="gameItem">Game item.</param>
         /// <returns>Is item found another item around it.</returns>
-        private static bool CheckForNearByItems(int newXPosition, int newYPosition, IItem gameItem)
-        {
-            return gameItem.CoordinateX.Equals(newXPosition) &&
-                         gameItem.CoordinateY.Equals(newYPosition);
-        }
+        private static bool CheckForNearByItems(int newXPosition, int newYPosition, IItem gameItem) => 
+            gameItem.CoordinateX.Equals(newXPosition) &&
+            gameItem.CoordinateY.Equals(newYPosition);
 
         /// <summary>
         /// Finds nearest carnivore to the animal.
@@ -211,8 +209,7 @@ namespace GameEngine.Helpers
         /// <param name="carnivoresAround">Carnivores around.</param>
         /// <param name="animal">Animal.</param>
         /// <returns>Nearest carnivore.</returns>
-        public static Carnivore? FindNearestCarnivore(List<Carnivore> carnivoresAround, Animal animal
-            )
+        public static Carnivore? FindNearestCarnivore(List<Carnivore> carnivoresAround, Animal animal)
         {
             Carnivore? nearestCarnivore = null;
 
@@ -254,6 +251,7 @@ namespace GameEngine.Helpers
                     minCarnivoreDistance = nearestCarnivoreDistance;
                     nearestCarnivoreIndex = counter;
                 }
+
                 counter++;
             }
 
@@ -300,6 +298,7 @@ namespace GameEngine.Helpers
                     maxDistance = distance;
                     farthestFreeCellIndex = counter;
                 }
+
                 counter++;
             }
 
@@ -311,10 +310,7 @@ namespace GameEngine.Helpers
         /// </summary>
         /// <param name="gameItem">Game item.</param>
         /// <returns>Is item active.</returns>
-        public static bool IsItemActive(IItem gameItem)
-        {
-            return gameItem.IsActive;
-        }
+        public static bool IsItemActive(IItem gameItem) => gameItem.IsActive;
 
         /// <summary>
         /// Calculates a new position based on the free cells around item.
