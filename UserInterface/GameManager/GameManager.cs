@@ -3,10 +3,9 @@ using GameEngine.Entities;
 using GameEngine.Interfaces;
 using GameEngine.Services.Managers;
 using Repository;
-using System;
-using System.Timers;
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Timers;
 
 namespace UI
 {
@@ -22,6 +21,7 @@ namespace UI
         private readonly IPairManager _pairManager;
         private readonly IMovementManager _movementManager;
 
+        private System.Timers.Timer _timer;
         private Board _board;
         private List<IItem> _gameItems;
         private List<Pair> _pairs;
@@ -83,6 +83,40 @@ namespace UI
             _userInterface.ShowMessage(ConstantsRepository.ExitButtonDescription);
             _window.ResetFontColor();
 
+            SetTimer();
+                        
+            bool isGameOnGoing = true;
+            while (isGameOnGoing)
+            {
+                ConsoleKey? consoleKey = _userInterface.GetInputKey();
+
+                _additionManager.ProcessAddNewItem(consoleKey, _gameItemsInfo, _gameItems, _board);
+
+                isGameOnGoing = (consoleKey != ConsoleKey.Q && consoleKey != ConsoleKey.Escape);
+            }
+
+            _timer.Stop();
+            _timer.Dispose();
+        }
+
+        /// <summary>
+        /// Sets timer.
+        /// </summary>
+        private void SetTimer()
+        {
+            _timer = new System.Timers.Timer(ConstantsRepository.TimeInterval);
+            _timer.Elapsed += OnTimedEvent;
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
+        }
+
+        /// <summary>
+        /// Timed call of run game in defined interval of time.
+        /// </summary>
+        /// <param name="source">Timer.</param>
+        /// <param name="e">Event.</param>
+        private void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
             RunGame();
         }
 
@@ -91,34 +125,22 @@ namespace UI
         /// </summary>
         private void RunGame()
         {
-            bool isGameOnGoing = true;
-            while (isGameOnGoing)
-            {
-                Console.CursorVisible = false;
+            Console.CursorVisible = false;
 
-                _board.FillBoardWithItems(_gameItems);
+            _board.FillBoardWithItems(_gameItems);
 
-                _userInterface.DrawBoard(_board);
-                _board.PrepareBoard(_gameItems);
-                
-                _movementManager.Act(_gameItems, _board);
-
-                _pairManager.RemoveNotExistingPairs(_pairs);
-               
-                _pairManager.CheckPairForExistence(_pairs, _board, _gameItems, _childrenGameItems);
-
-                _pairManager.AddPairToList(_pairManager.CreatePair(_gameItems), _pairs);
-                
-                _additionManager.ProcessChildrenItems(_gameItems, _childrenGameItems);
-
-                _deletionManager.RemoveInactiveItems(_gameItems);
-                Thread.Sleep(ConstantsRepository.ThreadSleep);
-                ConsoleKey? consoleKey = _userInterface.GetInputKey();
+            _userInterface.DrawBoard(_board);
+            _board.PrepareBoard(_gameItems);
             
-                _additionManager.ProcessAddNewItem(consoleKey, _gameItemsInfo, _gameItems, _board);    
+            _movementManager.Act(_gameItems, _board);
 
-                isGameOnGoing = (consoleKey != ConsoleKey.Q && consoleKey != ConsoleKey.Escape);
-            }
+            _pairManager.RemoveNotExistingPairs(_pairs);
+            _pairManager.CheckPairForExistence(_pairs, _board, _gameItems, _childrenGameItems);
+            _pairManager.AddPairToList(_pairManager.CreatePair(_gameItems), _pairs);
+                
+            _additionManager.ProcessChildrenItems(_gameItems, _childrenGameItems);
+
+            _deletionManager.RemoveInactiveItems(_gameItems);
         }
 
         /// <summary>
