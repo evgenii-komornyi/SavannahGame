@@ -40,20 +40,24 @@ namespace Tests
         [Fact]
         public void AddItemToList_CheckItemsListCount_ReturnsOne()
         {
+            // Act
             _additionManager.ProcessAddNewItem(ConsoleKey.C, _gameItemsInfo, _gameItems, _board);
 
+            // Assert
             Assert.Single(_gameItems);
         }
 
         [Fact]
         public void AddChildrenToList_CheckItemsListCount_ReturnsOne()
         {
-            _additionManager.ProcessAddNewItem(ConsoleKey.C, _gameItemsInfo, _gameItems, _board);
-
-            _additionManager.ProcessChildrenItems(_gameItems, _childrenItems);
-
+            // Arrange
             const int ExpectedListCount = 3;
 
+            // Act
+            _additionManager.ProcessAddNewItem(ConsoleKey.C, _gameItemsInfo, _gameItems, _board);
+            _additionManager.ProcessChildrenItems(_gameItems, _childrenItems);
+            
+            // Assert
             Assert.Equal(ExpectedListCount, _gameItems.Count);
         }
 

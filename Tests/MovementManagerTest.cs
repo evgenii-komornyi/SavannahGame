@@ -67,45 +67,50 @@ namespace Tests
         [Fact]
         public void MoveItemOnBoard_ChecksNewItemCoordinates_ReturnsNewCoordinates()
         {
+            // Arrange
             int coodrinateXBeforeMove = _gameItems[0].CoordinateX;
             int coodrinateYBeforeMove = _gameItems[0].CoordinateY;
-
-            _movementManager.Act(_gameItems, _board);
-
-            bool ExpectedDifferenceBetweenCoordinates = Math.Abs(coodrinateXBeforeMove - _gameItems[0].CoordinateX) <= 1 || 
+            bool ExpectedDifferenceBetweenCoordinates = Math.Abs(coodrinateXBeforeMove - _gameItems[0].CoordinateX) <= 1 ||
                 Math.Abs(coodrinateYBeforeMove - _gameItems[0].CoordinateY) <= 1;
+
+            // Act
+            _movementManager.Act(_gameItems, _board);
             
+            // Assert
             Assert.True(ExpectedDifferenceBetweenCoordinates);
         }
 
         [Fact]
         public void EatNearestHerbivoreByCarnivore_ChecksHerbivoresHealthDecrease_ReturnsEightyNineWithAHalf()
         {
+            // Arrange
             var animals = _gameItems.Cast<Animal>().ToList();
-            
-            _movementManager.Act(_gameItems, _board);
-
             const double ExpectedHealthAfterAttack = 89.5;
 
+            // Act
+            _movementManager.Act(_gameItems, _board);
+
+            // Assert
             Assert.Equal(ExpectedHealthAfterAttack, animals[1].Health);
         }
 
         [Fact]
         public void HealCarnivoreAfterKillingHerbivore_ChecksCarnivoreRelocatedToHerbivoresCoordinatesAfterKillingItAndDeleteHerbivoreFromList_ReturnsCarnivoresHealthEqualsHundredAndCoordinatesEqualsOneAndOneAndListCountEqualsOne()
         {
+            // Arrange
             var animals = _gameItems.Cast<Animal>().ToList();
             var carnivore = animals[0];
             var herbivore = animals[1];
             herbivore.Health = 5;
-
-            _movementManager.Act(_gameItems, _board);
-
-            _deletionManager.RemoveInactiveItems(_gameItems);
-
             const double ExpectedCarnivoresHealth = 100;
             const double ExpectedCarnivoresCoordinateX = 1;
             const double ExpectedCarnivoresCoordinateY = 1;
 
+            // Act
+            _movementManager.Act(_gameItems, _board);
+            _deletionManager.RemoveInactiveItems(_gameItems);
+
+            // Assert
             Assert.Equal(ExpectedCarnivoresHealth, carnivore.Health);
             Assert.Equal(ExpectedCarnivoresCoordinateX, carnivore.CoordinateX);
             Assert.Equal(ExpectedCarnivoresCoordinateY, carnivore.CoordinateY);

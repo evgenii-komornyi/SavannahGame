@@ -71,29 +71,34 @@ namespace Tests
         [Fact]
         public void CreatePairAndAddPairToList_CheckTwoNearbyAnimalsIsInPair_ReturnsPairsListCountEqualsOne()
         {
+            // Act
             _pairManager.AddPairToList(_pairManager.CreatePair(_gameItems), _pairs);
 
+            // Assert
             Assert.Single(_pairs);
         }
 
         [Fact]
         public void GiveBirth_CheckIfPairExistsThreeRounds_ReturnsChildrenListCountEqualsOne()
         {
+            // Act
             _pairManager.AddPairToList(_pairManager.CreatePair(_gameItems), _pairs);
-
             _pairManager.CheckPairForExistence(_pairs, _board, _gameItems, _children);
             _pairManager.CheckPairForExistence(_pairs, _board, _gameItems, _children);
 
+            // Assert
             Assert.Single(_children);
         }
 
         [Fact]
         public void DestroyPair_CheckPairForExistence_ReturnsFalseIsPairExistFlag()
         {
+            // Arrange
             const int NewColumnsCount = 5;
             const int NewRowsCount = 5;
             _board = new Board(NewColumnsCount, NewRowsCount);
 
+            // Act
             Pair currentPair = _pairManager.CreatePair(_gameItems);
             _pairManager.AddPairToList(currentPair, _pairs);
 
@@ -102,6 +107,7 @@ namespace Tests
 
             _pairManager.CheckPairForExistence(_pairs, _board, _gameItems, _children);
 
+            // Assert
             Assert.False(currentPair.IsPairExist);
         }
     }

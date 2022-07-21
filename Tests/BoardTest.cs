@@ -37,30 +37,37 @@ namespace Tests
         [Fact]
         public void CreateArray_CheckArrayLength_ReturnsHundredFifty()
         {
+            // Arrange
             var actual = _board.GameBoard.Length;
-
             const int ExpectedLength = 150;
 
+            // Assert
             Assert.Equal(ExpectedLength, actual);
         }
 
         [Fact]
         public void FillBoardWithItems_CheckArrayOnNonEmptyCells_ContainsItemLetterOnPosition()
         {
+            // Arrange
+            const string expectedLetterAtPosition = "T";
+            
+            // Act
             _board.FillBoardWithItems(_items);
 
-            const string expectedLetterAtPosition = "T";
-
+            // Assert
             Assert.Contains(expectedLetterAtPosition, _board.GameBoard[_items[0].CoordinateX, _items[0].CoordinateY].Letter);
         }
 
         [Fact]
         public void PrepareBoard_CheckArrayOnEmptyCells_ContainsEmptyCells()
         {
-            _board.PrepareBoard(_items);
-
+            // Arrange
             const string expectedEmptyCellAtPosition = " ";
 
+            // Act
+            _board.PrepareBoard(_items);
+
+            // Assert
             Assert.Contains(expectedEmptyCellAtPosition, _board.GameBoard[5, 5].Letter);
         }
     }
