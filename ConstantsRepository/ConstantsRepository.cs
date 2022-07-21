@@ -51,7 +51,7 @@
         #endregion
 
         #region Other
-        public const int ThreadSleep = 1000;
+        public const int TimeInterval = 1000;
         public const string PluginsFolder = "Plugins";
         #endregion
     }
