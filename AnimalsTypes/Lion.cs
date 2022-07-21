@@ -23,7 +23,7 @@ namespace AnimalsTypes
             IsVisible = true;
             Letter = ConsoleKey.L;
             Color = ConsoleColor.DarkYellow;
-            Specie = "Lion";
+            Specie = ConstantsRepository.Lion;
         }
     }
 }

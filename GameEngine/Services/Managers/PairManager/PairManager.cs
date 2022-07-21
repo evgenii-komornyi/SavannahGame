@@ -91,6 +91,7 @@ namespace GameEngine.Services.Managers
                             {
                                 reproducedItems.Add(newItem);
                             }
+
                             pair.RelationshipDuration = 0;
                         }
                     }
@@ -107,7 +108,7 @@ namespace GameEngine.Services.Managers
         private bool IsAnimalStillNear(Animal currentAnimal, Animal pairAnimal)
         {
             return Math.Abs(currentAnimal.CoordinateX - pairAnimal.CoordinateX) <= 1 &&
-                   Math.Abs(currentAnimal.CoordinateY - pairAnimal.CoordinateY) <= 1;
+               Math.Abs(currentAnimal.CoordinateY - pairAnimal.CoordinateY) <= 1;
         }
 
         /// <summary>
@@ -130,8 +131,8 @@ namespace GameEngine.Services.Managers
         private IEnumerable<Pair> CheckForExistingPairs(List<Pair> pairs)
         {
             return from currentPair in pairs
-                   where !currentPair.IsPairExist
-                   select currentPair;
+               where !currentPair.IsPairExist
+               select currentPair;
         }
     }
 }

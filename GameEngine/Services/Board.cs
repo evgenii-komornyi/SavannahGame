@@ -71,9 +71,9 @@ namespace GameEngine
         public bool IsCellOnBoard(int newXCoordinate, int newYCoordinate, BoardItem[,] currentBoard)
         {
             return (newXCoordinate < 0) ||
-                   (newXCoordinate >= currentBoard.GetLength(0)) ||
-                   (newYCoordinate < 0) ||
-                   (newYCoordinate >= currentBoard.GetLength(1));
+               (newXCoordinate >= currentBoard.GetLength(0)) ||
+               (newYCoordinate < 0) ||
+               (newYCoordinate >= currentBoard.GetLength(1));
         }
 
         /// <summary>

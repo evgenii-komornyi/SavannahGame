@@ -23,8 +23,8 @@ namespace GameEngine.Services.Managers
         private IEnumerable<IItem> CheckForActive(List<IItem> gameItems)
         {
             return from currentItem in gameItems
-                   where !Helper.IsItemActive(currentItem)
-                   select currentItem;
+               where !Helper.IsItemActive(currentItem)
+               select currentItem;
         }
     }
 }

@@ -46,10 +46,8 @@ namespace GameEngine.Services.Managers
             {
                 GenerateItemCoordinates(newGameItem, freeCells, gameItems);
             }
-            else
-            {
-                return;
-            }
+        
+            return;
         }
 
         /// <summary>

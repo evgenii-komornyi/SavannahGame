@@ -46,6 +46,7 @@ namespace GameEngine.Entities
             {
                 Die();
             }
+
             return Health;
         }
 
