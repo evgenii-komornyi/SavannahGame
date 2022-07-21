@@ -123,41 +123,39 @@ namespace UI
         /// </summary>
         private void LoadInstancesOfDllChildrenClasses()
         {
-            List<IItem> plugins = LoadPlugins().ToList();
+            List<IItem> boardItems = LoadBoardItems().ToList();
 
-            foreach (var plugin in plugins)
+            foreach (var boardItem in boardItems)
             {
                 GameItemsInfo info = new GameItemsInfo
                 {
-                    Specie = plugin.Specie,
-                    Color = plugin.Color,
-                    Type = plugin.GetType()
+                    Specie = boardItem.Specie,
+                    Color = boardItem.Color,
+                    Type = boardItem.GetType()
                 };
 
-                _gameItemsInfo.Add(plugin.Letter, info);                
+                _gameItemsInfo.Add(boardItem.Letter, info);                
             }
         }
 
         /// <summary>
-        /// Load DLL plugins from Plugins directory.
+        /// Load DLL board items from Plugins directory.
         /// </summary>
-        /// <returns></returns>
-        private IEnumerable<IItem> LoadPlugins()
+        /// <returns>Board items.</returns>
+        private IEnumerable<IItem> LoadBoardItems()
         {
-            List<IItem> result = new List<IItem>();
+            List<IItem> boardItems = new List<IItem>();
 
             foreach (var dll in Directory.GetFiles($"{AppDomain.CurrentDomain.BaseDirectory}/{ConstantsRepository.PluginsFolder}", "*.dll"))
             {
                 AssemblyLoadContext assemblyLoadContext = new AssemblyLoadContext(dll);
                 Assembly assembly = Assembly.LoadFrom(dll);
-                var plugins = assembly.ExportedTypes
-                    .Where(t => typeof(IItem).IsAssignableFrom(t)).ToList();
-
-                var plugin = plugins.Select(plugin => (IItem)Activator.CreateInstance(plugin));
-                result.Add((IItem)plugin);
+                boardItems = assembly.ExportedTypes
+                    .Where(t => typeof(IItem).IsAssignableFrom(t))
+                    .Select(plugin => (IItem)Activator.CreateInstance(plugin)).ToList();
             }
 
-            return result;
+            return boardItems;
         }
     }
 }
