@@ -17,9 +17,9 @@ namespace GameEngine.Services.Managers
         /// <param name="gameItemsInfo">Game items info.</param>
         /// <param name="gameItems">Game items.</param>
         /// <param name="board">Board.</param>
-        public void ProcessAddNewItem(ConsoleKey? consoleKey, Dictionary<ConsoleKey,GameItemsInfo> gameItemsInfo, List<IItem> gameItems, Board board)
+        public void ProcessAddNewItem(ConsoleKey? consoleKey, Dictionary<ConsoleKey, IItem> gameItemsInfo, List<IItem> gameItems, Board board)
         {
-            GameItemsInfo itemInfo;
+            IItem itemInfo;
 
             if (consoleKey != null)
             {
@@ -27,7 +27,7 @@ namespace GameEngine.Services.Managers
                 {
                     if (gameItemsInfo.TryGetValue((ConsoleKey)consoleKey, out itemInfo))
                     {
-                        AddItem((IItem)Activator.CreateInstance(itemInfo.Type), gameItems, board);
+                        AddItem((IItem)Activator.CreateInstance(itemInfo.GetType()), gameItems, board);
                     }
                 }
             }
