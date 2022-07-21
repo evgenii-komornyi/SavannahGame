@@ -3,6 +3,8 @@ using GameEngine.Entities;
 using GameEngine.Interfaces;
 using GameEngine.Services.Managers;
 using Repository;
+using System;
+using System.Timers;
 using System.Reflection;
 using System.Runtime.Loader;
 
@@ -25,7 +27,7 @@ namespace UI
         private List<Pair> _pairs;
         private List<IItem> _childrenGameItems;
 
-        private Dictionary<ConsoleKey, GameItemsInfo> _gameItemsInfo = new Dictionary<ConsoleKey, GameItemsInfo>();
+        private Dictionary<ConsoleKey, IItem> _gameItemsInfo = new Dictionary<ConsoleKey, IItem>();
 
         /// <summary>
         /// The class contains all logic layer to start a game from User Interface.
@@ -80,6 +82,7 @@ namespace UI
             _window.SetFontColor(ConsoleColor.Black);
             _userInterface.ShowMessage(ConstantsRepository.ExitButtonDescription);
             _window.ResetFontColor();
+
             RunGame();
         }
 
@@ -127,14 +130,7 @@ namespace UI
 
             foreach (var boardItem in boardItems)
             {
-                GameItemsInfo info = new GameItemsInfo
-                {
-                    Specie = boardItem.Specie,
-                    Color = boardItem.Color,
-                    Type = boardItem.GetType()
-                };
-
-                _gameItemsInfo.Add(boardItem.Letter, info);                
+                _gameItemsInfo.Add(boardItem.Letter, boardItem);                
             }
         }
 

@@ -15,7 +15,7 @@ namespace GameEngine.Services.Managers
         /// <param name="gameItemsInfo">Game items info.</param>
         /// <param name="gameItems">Game items.</param>
         /// <param name="board">Board.</param>
-        void ProcessAddNewItem(ConsoleKey? consoleKey, Dictionary<ConsoleKey, GameItemsInfo> gameItemsInfo, List<IItem> gameItems, Board board);
+        void ProcessAddNewItem(ConsoleKey? consoleKey, Dictionary<ConsoleKey, IItem> gameItemsInfo, List<IItem> gameItems, Board board);
 
         /// <summary>
         /// Adds borned children to common game items' list.
