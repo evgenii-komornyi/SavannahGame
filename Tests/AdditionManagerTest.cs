@@ -11,7 +11,7 @@ namespace Tests
     {
         private List<IItem> _gameItems;
         private List<IItem> _childrenItems;
-        private Dictionary<ConsoleKey, GameItemsInfo> _gameItemsInfo;
+        private Dictionary<ConsoleKey, IItem> _gameItemsInfo;
         private Board _board;
         private AdditionManager _additionManager;
 
@@ -23,15 +23,10 @@ namespace Tests
                 CreateCarnivore(),
                 CreateCarnivore()
             };
-            _gameItemsInfo = new Dictionary<ConsoleKey, GameItemsInfo>();
+            _gameItemsInfo = new Dictionary<ConsoleKey, IItem>();
             IItem carnivore = CreateCarnivore();
 
-            _gameItemsInfo.Add(ConsoleKey.C, new GameItemsInfo
-            {
-                Specie = carnivore.Specie,
-                Color = carnivore.Color,
-                Type = carnivore.GetType()
-            });
+            _gameItemsInfo.Add(ConsoleKey.C, new TestCarnivore());
 
             _board = new Board();
             _additionManager = new AdditionManager();
