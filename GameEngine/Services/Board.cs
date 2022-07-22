@@ -1,45 +1,52 @@
 ﻿using GameEngine.Entities;
+using GameEngine.Interfaces;
 using Repository;
 
 namespace GameEngine
 {
     /// <summary>
-    /// The class contains all logic of the game engine.
+    /// The class contains all logic of the game board.
     /// </summary>
     public class Board
     {
-        public string[,] GameBoard;
+        public BoardItem[,] GameBoard;
 
         /// <summary>
-        /// The class contains all logic of the game engine.
+        /// The class contains all logic of the game board.
         /// </summary>
         public Board()
         {
-            GameBoard = new string[ConstantsRepository.ColumnsCount, ConstantsRepository.RowsCount];
+            GameBoard = new BoardItem[ConstantsRepository.ColumnsCount, ConstantsRepository.RowsCount];
             ClearBoard();
         }
 
         /// <summary>
-        /// Fills the board with animals
+        /// Fills the board with the game items.
         /// </summary>
-        /// <param name="animals">Animals to fill the board.</param>
-        public void FillBoardWithAnimals(List<Animal> animals)
+        /// <param name="gameItems">Game items.</param>
+        public void FillBoardWithItems(List<IItem> gameItems)
         {
-            foreach (var animal in animals)
+            foreach (var gameItem in gameItems)
             {
-                PutAnimalOnBoard(animal, animal.Letter);
+                PutItemOnBoard(gameItem);
             }
         }
 
         /// <summary>
-        /// Removes animal from board.
+        /// Prepares clean board for new iteration.
         /// </summary>
-        /// <param name="animals">Animals.</param>
-        public void RemoveAnimalFromBoard(List<Animal> animals)
+        /// <param name="gameItems">Game items.</param>
+        public void PrepareBoard(List<IItem> gameItems)
         {
-            foreach (Animal animal in animals)
+            BoardItem boardItem = new BoardItem
             {
-                GameBoard[animal.CoordinateX, animal.CoordinateY] = ConstantsRepository.EmptyCell;
+                Letter = ConstantsRepository.EmptyCell,
+                Color = ConsoleColor.Gray
+            };
+
+            foreach (var gameItem in gameItems)
+            {
+                GameBoard[gameItem.CoordinateX, gameItem.CoordinateY] = boardItem;
             }
         }
 
@@ -50,22 +57,27 @@ namespace GameEngine
         /// <param name="newYCoordinate">New Y coordinate.</param>
         /// <param name="currentBoard">Current board.</param>
         /// <returns>Is cell on board.</returns>
-        public bool IsCellOnBoard(int newXCoordinate, int newYCoordinate, string[,] currentBoard)
+        public bool IsCellOnBoard(int newXCoordinate, int newYCoordinate, BoardItem[,] currentBoard)
         {
             return (newXCoordinate < 0) ||
-                   (newXCoordinate >= currentBoard.GetLength(0)) ||
-                   (newYCoordinate < 0) ||
-                   (newYCoordinate >= currentBoard.GetLength(1));
+               (newXCoordinate >= currentBoard.GetLength(0)) ||
+               (newYCoordinate < 0) ||
+               (newYCoordinate >= currentBoard.GetLength(1));
         }
 
         /// <summary>
-        /// Fills the board with the first animals' letter. 
+        /// Fills the board with the item key and color. 
         /// </summary>
-        /// <param name="animal">Animal.</param>
-        /// <param name="animalLetter">Animal letter.</param>
-        private void PutAnimalOnBoard(Animal animal, string animalLetter)
+        /// <param name="gameItem">Game item.</param>
+        private void PutItemOnBoard(IItem gameItem)
         {
-            GameBoard[animal.CoordinateX, animal.CoordinateY] = animalLetter;
+            BoardItem boardItem = new BoardItem
+            {
+                Letter = gameItem.Letter.ToString(),
+                Color = gameItem.Color
+            };
+
+            GameBoard[gameItem.CoordinateX, gameItem.CoordinateY] = boardItem;
         }
 
         /// <summary>
@@ -73,11 +85,17 @@ namespace GameEngine
         /// </summary>
         private void ClearBoard()
         {
+            BoardItem boardItem = new BoardItem
+            {
+                Letter = ConstantsRepository.EmptyCell,
+                Color = ConsoleColor.Gray
+            };
+
             for (int currentColumn = 0; currentColumn < GameBoard.GetLength(0); currentColumn++)
             {
                 for (int currentRow = 0; currentRow < GameBoard.GetLength(1); currentRow++)
                 {     
-                    GameBoard[currentColumn, currentRow] = ConstantsRepository.EmptyCell;
+                    GameBoard[currentColumn, currentRow] = boardItem;
                 }
             }
         }

@@ -1,66 +1,76 @@
 ﻿using GameEngine.Entities;
+using GameEngine.Helpers;
+using GameEngine.Interfaces;
 using Repository;
 
-namespace GameEngine.Services.PairManager
+namespace GameEngine.Services.Managers
 {
     /// <summary>
-    /// The class contains logic to manage aniimals' pairs.
+    /// The class contains logic to manage animals' pairs.
     /// </summary>
     public class PairManager : IPairManager
     {
         /// <summary>
-        /// Pair.
+        /// Creates new pair for current pairable item, searching opposite free pairable item near by this item. 
         /// </summary>
-        public Pair? Pair { get; private set; }
-
-        /// <summary>
-        /// Creates new pair for current animal, searching opposite free animal near by this animal. 
-        /// </summary>
-        /// <param name="animals">Animals.</param>
-        public void CreatePair(List<Animal> animals)
+        /// <param name="pairableItems">Pairable items.</param>
+        /// <returns>New pair.</returns>
+        public Pair CreatePair(List<IItem> pairableItems)
         {
-            foreach (var currentAnimal in animals)
+            Pair newPair = null;
+            foreach (var currentAnimal in pairableItems.Cast<Animal>())
             {
                 if (!currentAnimal.IsPaired)
                 {
-                    List<Animal> animalsAround = Helper.LookAround(currentAnimal, animals).ToList();
+                    List<Animal> animalsAround = Helper.LookAround(currentAnimal, pairableItems).Cast<Animal>().ToList();
 
                     List<Animal> freeOppositeSexAnimalsAround = animalsAround
                         .Where(animal => !animal.Sex.Equals(currentAnimal.Sex) && !animal.IsPaired && animal.GetType() == currentAnimal.GetType())
-                        .Select(animal => animal)
                         .ToList();
 
                     Animal? animalToPair = freeOppositeSexAnimalsAround.FirstOrDefault();
 
-                    if (animalToPair == null)
+                    if (animalToPair != null)
                     {
-                        return;
+                        newPair = new Pair
+                        {
+                            FirstAnimal = currentAnimal,
+                            SecondAnimal = animalToPair,
+                            IsPairExist = true
+                        };
+
+                        newPair.FirstAnimal.IsPaired = true;
+                        newPair.SecondAnimal.IsPaired = true;
                     }
-
-                    Pair newPair = new Pair
-                    {
-                        FirstAnimal = currentAnimal,
-                        SecondAnimal = animalToPair,
-                        IsPairExist = true
-                    };
-
-                    newPair.FirstAnimal.IsPaired = true;
-                    newPair.SecondAnimal.IsPaired = true;
-                    Pair = newPair;
                 }
+            }
+
+            return newPair;
+        }
+
+        /// <summary>
+        /// Added pair to list.
+        /// </summary>
+        /// <param name="newPair">New pair.</param>
+        /// <param name="pairs">Pairs.</param>
+        public void AddPairToList(Pair newPair, List<Pair> pairs)
+        {
+            if (newPair != null)
+            {
+                pairs.Add(newPair);
             }
         }
 
         /// <summary>
-        /// Checks pair for existance, and if it is true, then animal can give birth new animal after 3 consecutive rounds. 
+        /// Checks pair for existance, and if it is true, then item can reproduce new item after 3 consecutive rounds. 
         /// </summary>
-        /// <param name="pairs">Pairs.</param>
+        /// <param name="pairsToDestroy">Pairs to destroy.</param>
         /// <param name="board">Board.</param>
-        /// <param name="animals">Animals.</param>
-        /// <param name="children">Childs.</param>
-        public void CheckPairForExistence(List<Pair> pairs, Board board, List<Animal> animals, List<Animal> children)
+        /// <param name="gameItems">Game items.</param>
+        /// <param name="reproducedItems">Reproduced items.</param>
+        public void CheckPairForExistence(List<Pair> pairsToDestroy, Board board, List<IItem> gameItems, List<IItem> reproducedItems)
         {
-            foreach (var pair in pairs)
+            foreach (var pair in pairsToDestroy)
             {
                 if (pair != null)
                 {
@@ -76,8 +86,12 @@ namespace GameEngine.Services.PairManager
 
                         if (pair.RelationshipDuration == ConstantsRepository.RelationshipDuration)
                         {
-                            Animal child = pair.GiveBirth(board, animals, pairs);
-                            children.Add(child);
+                            IItem? newItem = pair.Reproduce(board, gameItems, pairsToDestroy);
+                            if (newItem != null)
+                            {
+                                reproducedItems.Add(newItem);
+                            }
+
                             pair.RelationshipDuration = 0;
                         }
                     }
@@ -94,13 +108,13 @@ namespace GameEngine.Services.PairManager
         private bool IsAnimalStillNear(Animal currentAnimal, Animal pairAnimal)
         {
             return Math.Abs(currentAnimal.CoordinateX - pairAnimal.CoordinateX) <= 1 &&
-                   Math.Abs(currentAnimal.CoordinateY - pairAnimal.CoordinateY) <= 1;
+               Math.Abs(currentAnimal.CoordinateY - pairAnimal.CoordinateY) <= 1;
         }
 
         /// <summary>
         /// Removes pairs that end their existence. 
         /// </summary>
-        public void RemoveNonExistsPairs(List<Pair> pairs)
+        public void RemoveNotExistingPairs(List<Pair> pairs)
         {
             if (pairs.Count != 0)
             {
@@ -117,8 +131,8 @@ namespace GameEngine.Services.PairManager
         private IEnumerable<Pair> CheckForExistingPairs(List<Pair> pairs)
         {
             return from currentPair in pairs
-                   where !currentPair.IsPairExist
-                   select currentPair;
+               where !currentPair.IsPairExist
+               select currentPair;
         }
     }
 }
