@@ -5,7 +5,6 @@ using GameEngine.Services.Managers;
 using Repository;
 using System.Reflection;
 using System.Runtime.Loader;
-using System.Timers;
 
 namespace UI
 {
@@ -105,19 +104,9 @@ namespace UI
         private void SetTimer()
         {
             _timer = new System.Timers.Timer(ConstantsRepository.TimeInterval);
-            _timer.Elapsed += OnTimedEvent;
+            _timer.Elapsed += (source, e) => RunGame();
             _timer.AutoReset = true;
             _timer.Enabled = true;
-        }
-
-        /// <summary>
-        /// Timed call of run game in defined interval of time.
-        /// </summary>
-        /// <param name="source">Timer.</param>
-        /// <param name="e">Event.</param>
-        private void OnTimedEvent(Object source, ElapsedEventArgs e)
-        {
-            RunGame();
         }
 
         /// <summary>
