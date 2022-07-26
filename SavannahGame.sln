@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UserInterface\UI.cspr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConstantsRepository", "ConstantsRepository\ConstantsRepository.csproj", "{0B06C9E1-DB64-4C3D-B64C-1BCB700C020E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimalsTypes", "AnimalsTypes\AnimalsTypes.csproj", "{A2C6916B-EAFD-4CFA-AB6F-A0F825ED9D09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimalTypes", "AnimalsTypes\AnimalTypes.csproj", "{A2C6916B-EAFD-4CFA-AB6F-A0F825ED9D09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{174EB5DB-D6DC-4635-9E41-21186C069F41}"
 EndProject

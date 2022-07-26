@@ -2,7 +2,7 @@
 using GameEngine.Helpers;
 using Repository;
 
-namespace AnimalsTypes
+namespace AnimalTypes
 {
     /// <summary>
     /// Fox entity.
@@ -23,7 +23,7 @@ namespace AnimalsTypes
             IsVisible = true;
             Letter = ConsoleKey.F;
             Color = ConsoleColor.DarkYellow;
-            Specie = ConstantsRepository.Fox;
+            Species = ConstantsRepository.Fox;
         }
     }
 }
