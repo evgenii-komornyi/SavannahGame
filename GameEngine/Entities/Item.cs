@@ -45,7 +45,7 @@ namespace GameEngine.Entities
         /// <summary>
         /// Item's specie.
         /// </summary>
-        public string Specie { get; set; }
+        public string Species { get; set; }
 
         private static int id = 0;
 

@@ -31,16 +31,17 @@ namespace GameEngine.Entities
         /// <summary>
         /// Heals the animal for the passed value.
         /// </summary>
-        /// <param name="healthToIncrease"></param>
-        /// <returns></returns>
+        /// <param name="healthToIncrease">Health to increase.</param>
+        /// <returns>Health after increasing.</returns>
         protected virtual double Heal(double healthToIncrease) => Health += healthToIncrease;
 
         /// <summary>
-        /// Decreases heals by damage.
+        /// Decreases health by damage.
         /// </summary>
         /// <param name="damage">Damage.</param>
         /// <returns>Health after decreasing.</returns>
-        protected virtual double GetDamage(double damage) { 
+        protected virtual double GetDamage(double damage) 
+        { 
             Health -= damage;
             if (Health <= 0)
             {

@@ -2,28 +2,28 @@
 using GameEngine.Helpers;
 using Repository;
 
-namespace AnimalsTypes
+namespace AnimalTypes
 {
     /// <summary>
-    /// Rabbit entity.
+    /// Lion entity.
     /// </summary>
-    public class Rabbit : Herbivore
+    public class Lion : Carnivore
     {
         /// <summary>
-        /// Rabbit entity.
+        /// Lion entity.
         /// </summary>
-        public Rabbit()
+        public Lion()
         {
             Id = GenerateId();
             Sex = (AnimalSex)Helper.random.Next(2);
             IsPaired = false;
-            Vision = ConstantsRepository.RabbitVision;
+            Vision = ConstantsRepository.LionVision;
             Health = ConstantsRepository.MaxHealth;
             IsActive = true;
             IsVisible = true;
-            Letter = ConsoleKey.R;
-            Color = ConsoleColor.White;
-            Specie = ConstantsRepository.Rabbit;
+            Letter = ConsoleKey.L;
+            Color = ConsoleColor.DarkYellow;
+            Species = ConstantsRepository.Lion;
         }
     }
 }

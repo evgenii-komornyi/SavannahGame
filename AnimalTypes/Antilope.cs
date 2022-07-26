@@ -2,7 +2,7 @@
 using GameEngine.Helpers;
 using Repository;
 
-namespace AnimalsTypes
+namespace AnimalTypes
 {
     /// <summary>
     /// Antilope entity.
@@ -23,7 +23,7 @@ namespace AnimalsTypes
             IsVisible = true;
             Letter = ConsoleKey.A;
             Color = ConsoleColor.Yellow;
-            Specie = ConstantsRepository.Antilope;
+            Species = ConstantsRepository.Antilope;
         }
     }
 }
