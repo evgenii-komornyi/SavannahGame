@@ -14,11 +14,6 @@ namespace UI
         string? GetResponseFromMenu();
 
         /// <summary>
-        /// Shows buttons and corresponding commands.
-        /// </summary>
-        void ShowMenuButtons();
-
-        /// <summary>
         /// Shows message to user.
         /// </summary>
         /// <param name="message">Message to show.</param>
