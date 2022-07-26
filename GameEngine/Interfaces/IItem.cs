@@ -43,7 +43,7 @@
         /// <summary>
         /// Item's specie.
         /// </summary>
-        string Specie { get; set; }
+        string Species { get; set; }
 
         /// <summary>
         /// Makes item inactive.

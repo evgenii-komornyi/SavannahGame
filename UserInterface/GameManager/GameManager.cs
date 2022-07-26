@@ -73,7 +73,7 @@ namespace UI
             foreach (var info in _gameItemsInfo)
             {
                 _window.SetFontColor(info.Value.Color);
-                _userInterface.ShowMessage($"Press {info.Key} - to add {info.Value.Specie};");
+                _userInterface.ShowMessage($"Press {info.Key} - to add {info.Value.Species};");
                 _window.ResetFontColor();
             }
 
