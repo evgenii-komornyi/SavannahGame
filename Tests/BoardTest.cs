@@ -26,7 +26,7 @@ namespace Tests
                     IsVisible = true,
                     Vision = 2,
                     Health = 100,
-                    Specie = "Test",
+                    Species = "Test",
                     Letter = ConsoleKey.T,
                     Color = ConsoleColor.White,
                     IsActive = true

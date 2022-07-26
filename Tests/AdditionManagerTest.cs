@@ -67,7 +67,7 @@ namespace Tests
                 Vision = 2,
                 Health = 100,
                 IsActive = true,
-                Specie = "Carnivore",
+                Species = "Carnivore",
                 Letter = ConsoleKey.C,
                 Color = ConsoleColor.White
             };
