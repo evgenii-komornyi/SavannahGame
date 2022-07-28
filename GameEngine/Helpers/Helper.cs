@@ -46,9 +46,7 @@ namespace GameEngine.Helpers
                 .Select(animal => (T)animal)
                 .ToList();
         }
-
         
-
         /// <summary>
         /// Calculates square distance by Pythagorian theorem.
         /// </summary>

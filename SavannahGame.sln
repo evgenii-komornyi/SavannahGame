@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConstantsRepository", "Cons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimalTypes", "AnimalsTypes\AnimalTypes.csproj", "{A2C6916B-EAFD-4CFA-AB6F-A0F825ED9D09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{174EB5DB-D6DC-4635-9E41-21186C069F41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A2C6916B-EAFD-4CFA-AB6F-A0F825ED9D09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2C6916B-EAFD-4CFA-AB6F-A0F825ED9D09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2C6916B-EAFD-4CFA-AB6F-A0F825ED9D09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{174EB5DB-D6DC-4635-9E41-21186C069F41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{174EB5DB-D6DC-4635-9E41-21186C069F41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{174EB5DB-D6DC-4635-9E41-21186C069F41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{174EB5DB-D6DC-4635-9E41-21186C069F41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
