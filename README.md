@@ -10,3 +10,10 @@
 - [x] 5. Each animal takes portion of time from game engine to move and perform a special action
 - [x] 6. Each animal has vision range and moves based on it
 
+### Iteration 2 Requirements
+
+- [x] 1. Add health metric for each animal
+- [x] 2. Decrease 0.5 health on each move
+- [x] 3. Increase health when antelope is eaten
+- [x] 4. Add die function for lack of health
+- [x] 5. Birth function when 2 animals are near each other for 3 consecutive rounds
