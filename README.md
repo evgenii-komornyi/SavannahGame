@@ -1,5 +1,7 @@
 # Savannah Game
 
+![Savannah Game](https://komornyi.space/static/img/projects/20.png)
+
 ### Iteration 1 Requirements:
 - [x]  1. Console application;
 - [x] 2. Pressing buttons A and L adds animals to the field;
@@ -21,3 +23,6 @@
 ### Iteration 3 Requirements:
 - [x] 1. Create possibility to store your animal behavior as a separate assembly;
 - [x] 2. Add possibility to catch imported animals and make sure that they will work in your Savanna’s engine (plugins);
+
+### Tests:
+- [x] Code coverage 87.9%;
